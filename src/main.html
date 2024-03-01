@@ -16,7 +16,8 @@
         <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
         <script>
             // Creating a map object:
-            var map = new L.map("map");
+            var map = new L.map("map", { center : [46.85, 1.37], zoom : 6 });  // all France
+            // var map = new L.map("map", { center : [48.1761, -2.7552], zoom : 8 });  // centered on Bretagne
 
             // Creating a Layer object for the map tiles:
             var layer = new L.TileLayer(
@@ -30,9 +31,6 @@
                 latLngBounds,
                 { opacity: 0.5 }
             ).addTo(map);
-
-            // Center map:
-            map.fitBounds(latLngBounds);
         </script>
     </body>
 </html>
