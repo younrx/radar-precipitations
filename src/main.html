@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" /> <!-- define the character set used for this page -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <!-- define visible area of the web page -->
+        <title>Vindieu ça drache</title>
+        <link
+            rel="stylesheet"
+            href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"
+        />
+    </head>
+    <body>
+        <div style="display: flex; justify-content: center; align-items: center; height: 95dvh;">
+            <div id="map" style="width: 900px; height: 800px"></div>
+        </div>
+        <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+        <script>
+            // Creating a map object:
+            var map = new L.map("map");
+
+            // Creating a Layer object for the map tiles:
+            var layer = new L.TileLayer(
+                "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            ).addTo(map);
+
+            // Add rain layer:
+            var latLngBounds = L.latLngBounds([[40.92, -7.94], [52.18, 10.52]]);
+            var imageOverlay = L.imageOverlay(
+                "https://www.meteo60.fr/radars/animation-radars-france.gif",
+                latLngBounds,
+                { opacity: 0.5 }
+            ).addTo(map);
+
+            // Center map:
+            map.fitBounds(latLngBounds);
+        </script>
+    </body>
+</html>
