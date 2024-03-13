@@ -57,12 +57,23 @@
                 border-collapse: collapse;
                 border-spacing: 0;
             }
+
+            #time-bar {
+                width: 450px;
+                height: 24px;
+                background: transparent url(https://www.meteo60.fr/radars/animation-radars-france.gif) -267px -855px no-repeat;
+                position: absolute;
+                z-index: 10;
+                bottom: 100px; left: 720px;
+            }
         </style>
     </head>
     <body>
+        <div id="time-bar"></div>
         <div style="display: flex; justify-content: center; align-items: center;">
             <div id="map" style="width: 100dvw; height: 100dvh"></div>
         </div>
+
         <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
         <script>
             // Creating a map object:
