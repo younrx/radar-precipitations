@@ -94,19 +94,19 @@
 
         <script>
             // Creating a map object:
-            // For all France:
-            const viewCoordinates = [46.85, 1.37];
-            let zoomValue = 6;
-            if (window.screen.width <= 640) {  /* small screens */
-                zoomValue = 5;
-            }
-            // For BZH only:
-            // const viewCoordinates = [47.88, -2.86];
-            // let zoomValue = 8;
-            // if (window.screen.width <= 640) {  /* small screens */
-            //     zoomValue = 7;
-            // }
-            var map = new L.map("map", { center : viewCoordinates, zoom : zoomValue });
+            var map = new L.map("map");
+
+            // Define view parameters to apply:
+            let viewCoordinatesDefault = {lat: 46.85, lng: 1.37};  // default view coordinates
+            let viewDefaultZoom = 6;  // default view zoom
+            if (window.screen.width <= 640) { viewDefaultZoom = 5; }  // smaller zoom on small screens
+            // Read cache:
+            const viewCoordinatesLat = localStorage.getItem("viewCoordinatesLat") != null ? localStorage.getItem("viewCoordinatesLat") : viewCoordinatesDefault.lat;
+            const viewCoordinatesLng = localStorage.getItem("viewCoordinatesLng") != null ? localStorage.getItem("viewCoordinatesLng") : viewCoordinatesDefault.lng;
+            const viewZoom = localStorage.getItem("viewZoom") != null ? localStorage.getItem("viewZoom") : viewDefaultZoom;
+            // apply view parameters:
+            map.setView({lat: viewCoordinatesLat, lng: viewCoordinatesLng});
+            map.setZoom(viewZoom);
 
             // Creating a Layer object for the map tiles:
             var layer = new L.TileLayer(
@@ -148,9 +148,14 @@
             document.getElementById('map-legend').appendChild(document.getElementById('rain-legend'));
             // ***** Map legend - End ***** //
 
-            // map.addEventListener('mousemove', function(ev) {
-            //     console.log(map.getCenter());
-            // });
+            // Store view parameters in local cache so that the user can personalize the view shown after loading page:
+            map.addEventListener('moveend', function(ev) {  // triggered on map move/zoom
+                const viewCoordinates = map.getCenter();
+                const viewZoom = map.getZoom();
+                localStorage.setItem("viewCoordinatesLat", viewCoordinates.lat);
+                localStorage.setItem("viewCoordinatesLng", viewCoordinates.lng);
+                localStorage.setItem("viewZoom", viewZoom);
+            });
         </script>
     </body>
 </html>
