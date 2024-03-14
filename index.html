@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" /> <!-- define the character set used for this page -->
         <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <!-- define visible area of the web page -->
-        <title>Vindieu ça drache</title>
+        <title>Radar précipitations</title>
 
         <link
             rel="stylesheet"
@@ -22,7 +22,7 @@
             h1, h2, h3, h4, h5, h6, p, blockquote, pre,
             a, abbr, acronym, address, big, cite, code,
             del, dfn, em, img, ins, kbd, q, s, samp,
-            small, strike, strong, sub, sup, tt, var,
+            small, strike, strong, sub, sup, tt, let,
             b, u, i, center,
             dl, dt, dd, ol, ul, li,
             fieldset, form, label, legend,
@@ -62,45 +62,112 @@
                 border-spacing: 0;
             }
 
-            #time-bar {
+            /* MY CUSTOM STYLES - Start */
+            div.leaflet-left:has(> #map-legend) {
+                padding: 0;
+                margin: 0;
+                left: 50%;
+                transform: translate(-50%, 0%);
+            }
+            #map-legend {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                width: 400px;
+                margin-left: 0;
+            }
+            @media (width <= 640px) { #map-legend { width: 90dvw; } }  /* small screens */
+            #rain-legend {
+                width: 100%;
+                margin-left: 0;
+            }
+            #time-legend {
                 width: 450px;
                 height: 24px;
                 background: transparent url(https://www.meteo60.fr/radars/animation-radars-france.gif) -267px -855px no-repeat;
-                position: absolute;
-                z-index: 10;
-                bottom: 100px; left: 720px;
             }
+            /* MY CUSTOM STYLES - End */
         </style>
     </head>
     <body>
-        <div id="time-bar"></div>
-        <div style="display: flex; justify-content: center; align-items: center;">
-            <div id="map" style="width: 100dvw; height: 100dvh"></div>
-        </div>
-
         <script
             src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
             crossorigin="">
         </script>
 
+        <div style="display: flex; justify-content: center; align-items: center;">
+            <div id="map" style="width: 100dvw; height: 100dvh"></div>
+        </div>
+
         <script>
             // Creating a map object:
-            var map = new L.map("map", { center : [46.85, 1.37], zoom : 6 });  // all France
-            // var map = new L.map("map", { center : [48.1761, -2.7552], zoom : 8 });  // centered on BZH
+            let map = new L.map("map", { zoomControl: false, zoomSnap: 0.1 });
+
+            // Define view parameters to apply:
+            let viewCoordinatesDefault = {lat: 46.85, lng: 1.37};  // default view coordinates
+            let viewDefaultZoom = 6;  // default view zoom
+            if (window.screen.width <= 640) { viewDefaultZoom = 5; }  // smaller zoom on small screens
+            // Read cache:
+            const viewCoordinatesLat = localStorage.getItem("viewCoordinatesLat") != null ? localStorage.getItem("viewCoordinatesLat") : viewCoordinatesDefault.lat;
+            const viewCoordinatesLng = localStorage.getItem("viewCoordinatesLng") != null ? localStorage.getItem("viewCoordinatesLng") : viewCoordinatesDefault.lng;
+            const viewZoom = localStorage.getItem("viewZoom") != null ? localStorage.getItem("viewZoom") : viewDefaultZoom;
+            // apply view parameters:
+            map.setView({lat: viewCoordinatesLat, lng: viewCoordinatesLng});
+            map.setZoom(viewZoom);
 
             // Creating a Layer object for the map tiles:
-            var layer = new L.TileLayer(
+            let layer = new L.TileLayer(
                 "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             ).addTo(map);
 
-            // Add rain layer:
-            var latLngBounds = L.latLngBounds([[40.92, -7.94], [52.18, 10.52]]);
-            var imageOverlay = L.imageOverlay(
+            // Add rain git image as overlay:
+            let latLngBounds = L.latLngBounds([[40.92, -7.94], [52.18, 10.52]]);
+            let rainImageOverlay = L.imageOverlay(
                 "https://www.meteo60.fr/radars/animation-radars-france.gif",
                 latLngBounds,
                 { opacity: 0.5 }
-            ).addTo(map);
+            );
+            rainImageOverlay.addTo(map);
+
+            // ***** Map legend - Start ***** //
+            // Leaftlet control for main div:
+            L.Control.LegendWrapper = L.Control.extend({
+                onAdd: function(map) {
+                    let div = L.DomUtil.create('div');
+                    div.id = 'map-legend';
+                    return div;
+                }
+            });
+            // Leaftlet control for rain scale:            
+            L.Control.RainLegend = L.Control.extend({
+                onAdd: function(map) {
+                    let img = L.DomUtil.create('img');
+                    img.id = 'rain-legend';
+                    img.src = "./static/rain_levels.png";
+                    return img;
+                }
+            });
+            // add elements into map:
+            const legendDiv = new L.Control.LegendWrapper({ position: 'bottomleft' });
+            const rainLegend = new L.Control.RainLegend();
+            legendDiv.addTo(map);
+            rainLegend.addTo(map);
+            // place sub-elementss into map-legend:
+            let timeLegend = document.createElement('div');
+            timeLegend.id = "time-legend";
+            document.getElementById('map-legend').appendChild(timeLegend);
+            document.getElementById('map-legend').appendChild(document.getElementById('rain-legend'));
+            // ***** Map legend - End ***** //
+
+            // Store view parameters in local cache so that the user can personalize the view shown after loading page:
+            map.addEventListener('moveend', function(ev) {  // triggered on map move/zoom
+                const viewCoordinates = map.getCenter();
+                const viewZoom = map.getZoom();
+                localStorage.setItem("viewCoordinatesLat", viewCoordinates.lat);
+                localStorage.setItem("viewCoordinatesLng", viewCoordinates.lng);
+                localStorage.setItem("viewZoom", viewZoom);                
+            });
         </script>
     </body>
 </html>
