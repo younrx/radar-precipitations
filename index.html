@@ -4,10 +4,14 @@
         <meta charset="UTF-8" /> <!-- define the character set used for this page -->
         <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <!-- define visible area of the web page -->
         <title>Vindieu ça drache</title>
+        
         <link
             rel="stylesheet"
-            href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"
+            href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+            integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+            crossorigin=""
         />
+
         <style>
             /* http://meyerweb.com/eric/tools/css/reset/ 
             v2.0 | 20110126
@@ -74,7 +78,12 @@
             <div id="map" style="width: 100dvw; height: 100dvh"></div>
         </div>
 
-        <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+        <script
+            src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+            integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+            crossorigin="">
+        </script>
+
         <script>
             // Creating a map object:
             var map = new L.map("map", { center : [46.85, 1.37], zoom : 6 });  // all France
