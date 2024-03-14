@@ -70,17 +70,21 @@
                 transform: translate(-50%, 0%);
             }
             #map-legend {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
                 width: 400px;
                 margin-left: 0;
             }
+            @media (width <= 640px) { #map-legend { width: 90dvw; } }  /* small screens */
             #rain-legend {
                 width: 100%;
                 margin-left: 0;
             }
-            @media (width <= 640px) { #map-legend { width: 90dvw; } }  /* small screens */
-            #rain-gif-wrapper {
-                width: 840px;
-                height: 749px;
+            #time-legend {
+                width: 450px;
+                height: 24px;
+                background: transparent url(https://www.meteo60.fr/radars/animation-radars-france.gif) -267px -855px no-repeat;
             }
             /* MY CUSTOM STYLES - End */
         </style>
@@ -97,12 +101,6 @@
         </div>
 
         <script>
-            // Util function - wrap a html tag into another:
-            function wrap(el, wrapper) {
-                el.parentNode.insertBefore(wrapper, el);
-                wrapper.appendChild(el);
-            }
-
             // Creating a map object:
             let map = new L.map("map", { zoomControl: false, zoomSnap: 0.1 });
 
@@ -123,8 +121,7 @@
                 "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             ).addTo(map);
 
-            // ***** Map rain layer - Start ***** //
-            // Custom Leaftlet overlay for rain gif:
+            // Add rain git image as overlay:
             let latLngBounds = L.latLngBounds([[40.92, -7.94], [52.18, 10.52]]);
             let rainImageOverlay = L.imageOverlay(
                 "https://www.meteo60.fr/radars/animation-radars-france.gif",
@@ -132,23 +129,6 @@
                 { opacity: 0.5 }
             );
             rainImageOverlay.addTo(map);
-            rainImageOverlay.getElement().id = "rain-gif";
-            // rainImageOverlay.getElement() = `<div id="bouh">${rainImageOverlay.getElement()}</div>`;
-            // rain gif image wrapper:
-            let rainImageOverlayWrapper = document.createElement('div');
-            rainImageOverlayWrapper.id = "rain-gif-wrapper";
-            wrap(document.querySelector('#rain-gif'), rainImageOverlayWrapper);
-
-            // L.rectangle(latLngBounds, { color: "#ff7800", weight: 0, opacity: 0, fillOpacit: 0 }).addTo(map);
-
-            // let emptyOverlay = L.rectangle(
-            //     latLngBounds,
-            //     { weight: 0, opacity: 0, fillOpacity: 0 }
-            // );
-            // emptyOverlay.addTo(map);
-            // emptyOverlay.getElement().id = "empty-image-overlay";
-
-            // ***** Map rain layer - End ***** //
 
             // ***** Map legend - Start ***** //
             // Leaftlet control for main div:
@@ -174,6 +154,9 @@
             legendDiv.addTo(map);
             rainLegend.addTo(map);
             // place sub-elementss into map-legend:
+            let timeLegend = document.createElement('div');
+            timeLegend.id = "time-legend";
+            document.getElementById('map-legend').appendChild(timeLegend);
             document.getElementById('map-legend').appendChild(document.getElementById('rain-legend'));
             // ***** Map legend - End ***** //
 
@@ -184,11 +167,6 @@
                 localStorage.setItem("viewCoordinatesLat", viewCoordinates.lat);
                 localStorage.setItem("viewCoordinatesLng", viewCoordinates.lng);
                 localStorage.setItem("viewZoom", viewZoom);                
-            });
-            map.addEventListener('zoom', function(ev) {
-                console.log(document.querySelector('#rain-gif').style);
-                document.querySelector('#rain-gif-wrapper').style.transform = document.querySelector('#rain-gif').style.transform;
-                document.querySelector('#rain-gif').style.transform = "translate3d(0px, 0px, 0px)";
             });
         </script>
     </body>
