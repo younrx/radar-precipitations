@@ -7,8 +7,8 @@
 
         <link
             rel="stylesheet"
-            href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
-            integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+            href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+            integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
             crossorigin=""
         />
 
@@ -62,27 +62,35 @@
                 border-spacing: 0;
             }
 
-            #time-bar {
-                width: 450px;
-                height: 24px;
-                background: transparent url(https://www.meteo60.fr/radars/animation-radars-france.gif) -267px -855px no-repeat;
-                position: absolute;
-                z-index: 10;
-                bottom: 100px; left: 720px;
+            /* MY CUSTOM STYLES - Start */
+            div.leaflet-left:has(> #map-legend) {
+                padding: 0;
+                margin: 0;
+                left: 50%;
+                transform: translate(-50%, 0%);
             }
+            #map-legend {
+                width: 400px;
+                margin-left: 0;
+            }
+            #rain-legend {
+                width: 100%;
+                margin-left: 0;
+            }
+            @media (width <= 640px) { #map-legend { width: 90dvw; } }  /* small screens */
+            /* MY CUSTOM STYLES - End */
         </style>
     </head>
     <body>
-        <div id="time-bar"></div>
+        <script
+            src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin="">
+        </script>
+
         <div style="display: flex; justify-content: center; align-items: center;">
             <div id="map" style="width: 100dvw; height: 100dvh"></div>
         </div>
-
-        <script
-            src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
-            integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
-            crossorigin="">
-        </script>
 
         <script>
             // Creating a map object:
@@ -101,6 +109,33 @@
                 latLngBounds,
                 { opacity: 0.5 }
             ).addTo(map);
+
+            // ***** Map legend - Start ***** //
+            // Leaftlet control for main div:
+            L.Control.LegendWrapper = L.Control.extend({
+                onAdd: function(map) {
+                    var div = L.DomUtil.create('div');
+                    div.id = 'map-legend';
+                    return div;
+                }
+            });
+            // Leaftlet control for rain scale:            
+            L.Control.RainLegend = L.Control.extend({
+                onAdd: function(map) {
+                    var img = L.DomUtil.create('img');
+                    img.id = 'rain-legend';
+                    img.src = "./static/rain_levels.png";
+                    return img;
+                }
+            });
+            // add elements into map:
+            const legendDiv = new L.Control.LegendWrapper({ position: 'bottomleft' });
+            const rainLegend = new L.Control.RainLegend();
+            legendDiv.addTo(map);
+            rainLegend.addTo(map);
+            // place sub-elementss into map-legend:
+            document.getElementById('map-legend').appendChild(document.getElementById('rain-legend'));
+            // ***** Map legend - End ***** //
         </script>
     </body>
 </html>
