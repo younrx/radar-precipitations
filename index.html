@@ -94,8 +94,19 @@
 
         <script>
             // Creating a map object:
-            var map = new L.map("map", { center : [46.85, 1.37], zoom : 6 });  // all France
-            // var map = new L.map("map", { center : [48.1761, -2.7552], zoom : 8 });  // centered on BZH
+            // For all France:
+            const viewCoordinates = [46.85, 1.37];
+            let zoomValue = 6;
+            if (window.screen.width <= 640) {  /* small screens */
+                zoomValue = 5;
+            }
+            // For BZH only:
+            // const viewCoordinates = [47.88, -2.86];
+            // let zoomValue = 8;
+            // if (window.screen.width <= 640) {  /* small screens */
+            //     zoomValue = 7;
+            // }
+            var map = new L.map("map", { center : viewCoordinates, zoom : zoomValue });
 
             // Creating a Layer object for the map tiles:
             var layer = new L.TileLayer(
@@ -136,6 +147,10 @@
             // place sub-elementss into map-legend:
             document.getElementById('map-legend').appendChild(document.getElementById('rain-legend'));
             // ***** Map legend - End ***** //
+
+            // map.addEventListener('mousemove', function(ev) {
+            //     console.log(map.getCenter());
+            // });
         </script>
     </body>
 </html>
