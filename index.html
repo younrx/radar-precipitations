@@ -22,7 +22,7 @@
             h1, h2, h3, h4, h5, h6, p, blockquote, pre,
             a, abbr, acronym, address, big, cite, code,
             del, dfn, em, img, ins, kbd, q, s, samp,
-            small, strike, strong, sub, sup, tt, var,
+            small, strike, strong, sub, sup, tt, let,
             b, u, i, center,
             dl, dt, dd, ol, ul, li,
             fieldset, form, label, legend,
@@ -78,6 +78,10 @@
                 margin-left: 0;
             }
             @media (width <= 640px) { #map-legend { width: 90dvw; } }  /* small screens */
+            #rain-gif-wrapper {
+                width: 840px;
+                height: 749px;
+            }
             /* MY CUSTOM STYLES - End */
         </style>
     </head>
@@ -93,8 +97,14 @@
         </div>
 
         <script>
+            // Util function - wrap a html tag into another:
+            function wrap(el, wrapper) {
+                el.parentNode.insertBefore(wrapper, el);
+                wrapper.appendChild(el);
+            }
+
             // Creating a map object:
-            var map = new L.map("map", { zoomControl: false, zoomSnap: 0.1 });
+            let map = new L.map("map", { zoomControl: false, zoomSnap: 0.1 });
 
             // Define view parameters to apply:
             let viewCoordinatesDefault = {lat: 46.85, lng: 1.37};  // default view coordinates
@@ -109,23 +119,42 @@
             map.setZoom(viewZoom);
 
             // Creating a Layer object for the map tiles:
-            var layer = new L.TileLayer(
+            let layer = new L.TileLayer(
                 "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             ).addTo(map);
 
-            // Add rain layer:
-            var latLngBounds = L.latLngBounds([[40.92, -7.94], [52.18, 10.52]]);
-            var imageOverlay = L.imageOverlay(
+            // ***** Map rain layer - Start ***** //
+            // Custom Leaftlet overlay for rain gif:
+            let latLngBounds = L.latLngBounds([[40.92, -7.94], [52.18, 10.52]]);
+            let rainImageOverlay = L.imageOverlay(
                 "https://www.meteo60.fr/radars/animation-radars-france.gif",
                 latLngBounds,
                 { opacity: 0.5 }
-            ).addTo(map);
+            );
+            rainImageOverlay.addTo(map);
+            rainImageOverlay.getElement().id = "rain-gif";
+            // rainImageOverlay.getElement() = `<div id="bouh">${rainImageOverlay.getElement()}</div>`;
+            // rain gif image wrapper:
+            let rainImageOverlayWrapper = document.createElement('div');
+            rainImageOverlayWrapper.id = "rain-gif-wrapper";
+            wrap(document.querySelector('#rain-gif'), rainImageOverlayWrapper);
+
+            // L.rectangle(latLngBounds, { color: "#ff7800", weight: 0, opacity: 0, fillOpacit: 0 }).addTo(map);
+
+            // let emptyOverlay = L.rectangle(
+            //     latLngBounds,
+            //     { weight: 0, opacity: 0, fillOpacity: 0 }
+            // );
+            // emptyOverlay.addTo(map);
+            // emptyOverlay.getElement().id = "empty-image-overlay";
+
+            // ***** Map rain layer - End ***** //
 
             // ***** Map legend - Start ***** //
             // Leaftlet control for main div:
             L.Control.LegendWrapper = L.Control.extend({
                 onAdd: function(map) {
-                    var div = L.DomUtil.create('div');
+                    let div = L.DomUtil.create('div');
                     div.id = 'map-legend';
                     return div;
                 }
@@ -133,7 +162,7 @@
             // Leaftlet control for rain scale:            
             L.Control.RainLegend = L.Control.extend({
                 onAdd: function(map) {
-                    var img = L.DomUtil.create('img');
+                    let img = L.DomUtil.create('img');
                     img.id = 'rain-legend';
                     img.src = "./static/rain_levels.png";
                     return img;
@@ -154,7 +183,12 @@
                 const viewZoom = map.getZoom();
                 localStorage.setItem("viewCoordinatesLat", viewCoordinates.lat);
                 localStorage.setItem("viewCoordinatesLng", viewCoordinates.lng);
-                localStorage.setItem("viewZoom", viewZoom);
+                localStorage.setItem("viewZoom", viewZoom);                
+            });
+            map.addEventListener('zoom', function(ev) {
+                console.log(document.querySelector('#rain-gif').style);
+                document.querySelector('#rain-gif-wrapper').style.transform = document.querySelector('#rain-gif').style.transform;
+                document.querySelector('#rain-gif').style.transform = "translate3d(0px, 0px, 0px)";
             });
         </script>
     </body>
