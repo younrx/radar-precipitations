@@ -225,6 +225,10 @@
 
             var observer = new MutationObserver(function(mutations) {
                 mutations.forEach(function(mutationRecord) {
+                    const imgRainGif = document.querySelector('#rain-gif');
+                    const rect = imgRainGif.getBoundingClientRect();
+                    console.log("rain-gif: ", rect.left, rect.top, rect.bottom, rect.right);
+
                     // set wrapper style: identical to rain-gif styles:
                     if(document.querySelector('#rain-gif').style.transform != "translate3d(0px, 0px, 0px)") {
                         document.querySelector('#rain-gif-wrapper').style.transform = document.querySelector('#rain-gif').style.transform;
@@ -241,6 +245,14 @@
 
             var target = document.getElementById('rain-gif');
             observer.observe(target, { attributes : true, attributeFilter : ['style'] });
+
+            function printCoordinates() {
+                const div = document.querySelector('#rain-gif-wrapper');
+                const rect = div.getBoundingClientRect();
+                console.log(rect.left, rect.top, rect.bottom, rect.right);
+            }
+
+            setInterval(printCoordinates, 100);
         </script>
     </body>
 </html>
