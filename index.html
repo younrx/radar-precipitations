@@ -76,15 +76,39 @@
                 width: 400px;
                 margin-left: 0;
             }
-            @media (width <= 640px) { #map-legend { width: 90dvw; } }  /* small screens */
             #rain-legend {
                 width: 100%;
                 margin-left: 0;
             }
             #time-legend {
-                width: 450px;
-                height: 24px;
-                background: transparent url(https://www.meteo60.fr/radars/animation-radars-france.gif) -267px -855px no-repeat;
+                width: 100%;
+                aspect-ratio: 450/24;  /* value extracted from gif image size. It asumes the gif image size never change */
+                overflow: hidden;
+            }
+            #time-legend img {
+                width: 218.888888%;  /* value extracted from gif image size. It asumes the gif image size never change */
+                transform: translate(-27.106598%, -97.272727%);  /* value extracted from gif image size. It asumes the gif image size never change */
+                z-index: -1;
+            }
+            /* For small screens: */
+            @media (width <= 640px) {
+                #map-legend {
+                    width: 90dvw;
+                }
+                /* Hide rain blue pixels when time bar is not perfectly resized - Start */
+                #time-legend {
+                    position: relative;
+                }
+                #time-legend img {
+                    position: relative;
+                }
+                #time-legend-border {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    box-shadow: 0 0 0 1px #fff inset;
+                }
+                /* Hide rain blue pixels when time bar is not perfectly resized - End */
             }
             /* MY CUSTOM STYLES - End */
         </style>
@@ -153,10 +177,16 @@
             const rainLegend = new L.Control.RainLegend();
             legendDiv.addTo(map);
             rainLegend.addTo(map);
-            // place sub-elementss into map-legend:
+            // place sub-elements into map-legend:
             let timeLegend = document.createElement('div');
             timeLegend.id = "time-legend";
+            let timeLegendImg = document.createElement('img');
+            timeLegendImg.src = "https://www.meteo60.fr/radars/animation-radars-france.gif";
+            let timeLegendBoder = document.createElement('div');  // border to hide rain blue pixels when resizing is not exactly perfect (on small screens)
+            timeLegendBoder.id = "time-legend-border";
             document.getElementById('map-legend').appendChild(timeLegend);
+            document.getElementById('time-legend').appendChild(timeLegendBoder);
+            document.getElementById('time-legend').appendChild(timeLegendImg);
             document.getElementById('map-legend').appendChild(document.getElementById('rain-legend'));
             // ***** Map legend - End ***** //
 
