@@ -22,7 +22,7 @@
             h1, h2, h3, h4, h5, h6, p, blockquote, pre,
             a, abbr, acronym, address, big, cite, code,
             del, dfn, em, img, ins, kbd, q, s, samp,
-            small, strike, strong, sub, sup, tt, let,
+            small, strike, strong, sub, sup, tt, var,
             b, u, i, center,
             dl, dt, dd, ol, ul, li,
             fieldset, form, label, legend,
@@ -125,6 +125,8 @@
         </div>
 
         <script>
+            const rainGifImageSource = "https://www.meteo60.fr/radars/animation-radars-france.gif";
+
             // Creating a map object:
             let map = new L.map("map", { zoomControl: false, zoomSnap: 0.1 });
 
@@ -148,9 +150,9 @@
             // Add rain git image as overlay:
             let latLngBounds = L.latLngBounds([[40.92, -7.94], [52.18, 10.52]]);
             let rainImageOverlay = L.imageOverlay(
-                "https://www.meteo60.fr/radars/animation-radars-france.gif",
+                rainGifImageSource,
                 latLngBounds,
-                { opacity: 0.5 }
+                { opacity: 0.7 }
             );
             rainImageOverlay.addTo(map);
 
@@ -181,7 +183,7 @@
             let timeLegend = document.createElement('div');
             timeLegend.id = "time-legend";
             let timeLegendImg = document.createElement('img');
-            timeLegendImg.src = "https://www.meteo60.fr/radars/animation-radars-france.gif";
+            timeLegendImg.src = rainGifImageSource;
             let timeLegendBoder = document.createElement('div');  // border to hide rain blue pixels when resizing is not exactly perfect (on small screens)
             timeLegendBoder.id = "time-legend-border";
             document.getElementById('map-legend').appendChild(timeLegend);
