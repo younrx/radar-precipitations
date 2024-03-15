@@ -90,6 +90,10 @@
                 transform: translate(-27.106598%, -97.272727%);  /* value extracted from gif image size. It asumes the gif image size never change */
                 z-index: -1;
             }
+            #rain-gif-wrapper {
+                aspect-ratio: 985/850;
+                overflow: hidden;
+            }
             /* For small screens: */
             @media (width <= 640px) {
                 #map-legend {
@@ -127,6 +131,12 @@
         <script>
             const rainGifImageSource = "https://www.meteo60.fr/radars/animation-radars-france.gif";
 
+            // Util function - wrap a html tag into another:
+            function wrap(el, wrapper) {
+                el.parentNode.insertBefore(wrapper, el);
+                wrapper.appendChild(el);
+            }
+
             // Creating a map object:
             let map = new L.map("map", { zoomControl: false, zoomSnap: 0.1 });
 
@@ -155,6 +165,18 @@
                 { opacity: 0.7 }
             );
             rainImageOverlay.addTo(map);
+            rainImageOverlay.getElement().id = "rain-gif";
+            // rain gif image wrapper:
+            let rainImageOverlayWrapper = document.createElement('div');
+            rainImageOverlayWrapper.id = "rain-gif-wrapper";
+            document.querySelector("div.leaflet-pane:has(> #rain-gif)").appendChild(rainImageOverlayWrapper);
+            wrap(document.querySelector('#rain-gif'), rainImageOverlayWrapper);
+            // update styles:
+            document.querySelector('#rain-gif-wrapper').style.transform = document.querySelector('#rain-gif').style.transform;
+            document.querySelector('#rain-gif-wrapper').style.width = document.querySelector('#rain-gif').style.width;
+            document.querySelector('#rain-gif').style.transform = "translate3d(0px, 0px, 0px)";
+            document.querySelector('#rain-gif').style.width = "100%";
+            document.querySelector('#rain-gif').style.removeProperty('height');
 
             // ***** Map legend - Start ***** //
             // Leaftlet control for main div:
@@ -200,6 +222,25 @@
                 localStorage.setItem("viewCoordinatesLng", viewCoordinates.lng);
                 localStorage.setItem("viewZoom", viewZoom);                
             });
+
+            var observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutationRecord) {
+                    // set wrapper style: identical to rain-gif styles:
+                    if(document.querySelector('#rain-gif').style.transform != "translate3d(0px, 0px, 0px)") {
+                        document.querySelector('#rain-gif-wrapper').style.transform = document.querySelector('#rain-gif').style.transform;
+                    }
+                    if(document.querySelector('#rain-gif').style.width != "100%") {
+                        document.querySelector('#rain-gif-wrapper').style.width = document.querySelector('#rain-gif').style.width;
+                    }
+                    // reset rain-gif styles to default:
+                    document.querySelector('#rain-gif').style.transform = "translate3d(0px, 0px, 0px)";
+                    document.querySelector('#rain-gif').style.width = "100%";
+                    document.querySelector('#rain-gif').style.removeProperty('height');
+                });
+            });
+
+            var target = document.getElementById('rain-gif');
+            observer.observe(target, { attributes : true, attributeFilter : ['style'] });
         </script>
     </body>
 </html>
