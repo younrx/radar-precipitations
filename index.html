@@ -82,9 +82,13 @@
                 margin-left: 0;
             }
             #time-legend {
-                width: 450px;
-                height: 24px;
-                background: transparent url(https://www.meteo60.fr/radars/animation-radars-france.gif) -267px -855px no-repeat;
+                width: 100%;
+                aspect-ratio: 450/24;  /* value extracted from gif image size. It asumes the gif image size never change */
+                overflow: hidden;
+            }
+            #time-legend img {
+                width: 218.888888%;  /* value extracted from gif image size. It asumes the gif image size never change */
+                transform: translate(-27.106598%, -97.272727%);  /* value extracted from gif image size. It asumes the gif image size never change */
             }
             /* MY CUSTOM STYLES - End */
         </style>
@@ -153,10 +157,13 @@
             const rainLegend = new L.Control.RainLegend();
             legendDiv.addTo(map);
             rainLegend.addTo(map);
-            // place sub-elementss into map-legend:
+            // place sub-elements into map-legend:
             let timeLegend = document.createElement('div');
             timeLegend.id = "time-legend";
+            let timeLegendImg = document.createElement('img');
+            timeLegendImg.src = "https://www.meteo60.fr/radars/animation-radars-france.gif";
             document.getElementById('map-legend').appendChild(timeLegend);
+            document.getElementById('time-legend').appendChild(timeLegendImg);
             document.getElementById('map-legend').appendChild(document.getElementById('rain-legend'));
             // ***** Map legend - End ***** //
 
