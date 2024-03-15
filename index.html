@@ -90,10 +90,6 @@
                 transform: translate(-27.106598%, -97.272727%);  /* value extracted from gif image size. It asumes the gif image size never change */
                 z-index: -1;
             }
-            #canvas-for-cropped-gif {
-                /* display: none; */
-                border: 2px solid red;
-            }
             /* For small screens: */
             @media (width <= 640px) {
                 #map-legend {
@@ -128,29 +124,8 @@
             <div id="map" style="width: 100dvw; height: 100dvh"></div>
         </div>
 
-        <canvas id="canvas-for-cropped-gif" width="985" height="856"></canvas>
-
         <script>
             const rainGifImageSource = "https://www.meteo60.fr/radars/animation-radars-france.gif";
-            // Crop gif image:
-            var canvas = document.getElementById('canvas-for-cropped-gif');
-            var context = canvas.getContext('2d');
-            var imageObj = new Image();
-
-            imageObj.onload = function() {
-                // draw cropped image
-                var sourceX = 150;
-                var sourceY = 0;
-                var sourceWidth = 150;
-                var sourceHeight = 150;
-                var destWidth = sourceWidth;
-                var destHeight = sourceHeight;
-                var destX = canvas.width / 2 - destWidth / 2;
-                var destY = canvas.height / 2 - destHeight / 2;
-
-                context.drawImage(imageObj, sourceX, sourceY, sourceWidth, sourceHeight, destX, destY, destWidth, destHeight);
-            };
-            imageObj.src = rainGifImageSource;
 
             // Creating a map object:
             let map = new L.map("map", { zoomControl: false, zoomSnap: 0.1 });
