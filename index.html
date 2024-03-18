@@ -63,6 +63,15 @@
             }
 
             /* MY CUSTOM STYLES - Start */
+            #main {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            #map {
+                width: 100dvw;
+                height: 100dvh;
+            }
             div.leaflet-left:has(> #map-legend) {
                 padding: 0;
                 margin: 0;
@@ -130,8 +139,8 @@
             crossorigin="">
         </script>
 
-        <div style="display: flex; justify-content: center; align-items: center;">
-            <div id="map" style="width: 100dvw; height: 100dvh"></div>
+        <div id="main">
+            <div id="map"></div>
         </div>
 
         <script>
@@ -229,7 +238,7 @@
             document.getElementById('map-legend').appendChild(document.getElementById('rain-legend'));
 
             // ***** Map legend - End ***** //
-            
+
 
             // Store view parameters in local cache so that the user can personalize the view shown after loading page:
             map.addEventListener('moveend', function(ev) {  // triggered on map move/zoom
