@@ -94,6 +94,12 @@
                 aspect-ratio: 985/850;
                 overflow: hidden;
             }
+            #rain-gif {
+                width: 100%;
+            }
+            #rain-gif-ref {
+                visibility: hidden;
+            }
             /* For small screens: */
             @media (width <= 640px) {
                 #map-legend {
@@ -131,12 +137,6 @@
         <script>
             const rainGifImageSource = "https://www.meteo60.fr/radars/animation-radars-france.gif";
 
-            // Util function - wrap a html tag into another:
-            function wrap(el, wrapper) {
-                el.parentNode.insertBefore(wrapper, el);
-                wrapper.appendChild(el);
-            }
-
             // Creating a map object:
             let map = new L.map("map", { zoomControl: false, zoomSnap: 0.1 });
 
@@ -157,28 +157,43 @@
                 "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             ).addTo(map);
 
-            // Add rain git image as overlay:
+
+            // ***** Map rain animation - Start ***** //
+
+            // Add an overlay of the rain gif image as reference:
             let latLngBounds = L.latLngBounds([[40.92, -7.94], [52.18, 10.52]]);
-            let rainImageOverlay = L.imageOverlay(
+            let rainImageOverlayRef = L.imageOverlay(
                 rainGifImageSource,
                 latLngBounds,
                 { opacity: 0.7 }
             );
-            rainImageOverlay.addTo(map);
-            rainImageOverlay.getElement().id = "rain-gif";
-            // rain gif image wrapper:
+            rainImageOverlayRef.addTo(map);
+            rainImageOverlayRef.getElement().id = "rain-gif-ref";
+
+            // Create a custom overlay, which is an image in a div with the same styles than the reference overlay:
+            // generate the div:
             let rainImageOverlayWrapper = document.createElement('div');
             rainImageOverlayWrapper.id = "rain-gif-wrapper";
-            document.querySelector("div.leaflet-pane:has(> #rain-gif)").appendChild(rainImageOverlayWrapper);
-            wrap(document.querySelector('#rain-gif'), rainImageOverlayWrapper);
+            // generate the image:
+            let rainImageOverlay = document.createElement('img');
+            rainImageOverlay.id = "rain-gif";
+            rainImageOverlay.src = rainGifImageSource;
+            // insert elements in DOM (right next to the reference overlay):
+            document.querySelector("div.leaflet-pane:has(> #rain-gif-ref)").appendChild(rainImageOverlayWrapper);
+            document.querySelector("#rain-gif-wrapper").appendChild(rainImageOverlay);
             // update styles:
-            document.querySelector('#rain-gif-wrapper').style.transform = document.querySelector('#rain-gif').style.transform;
-            document.querySelector('#rain-gif-wrapper').style.width = document.querySelector('#rain-gif').style.width;
-            document.querySelector('#rain-gif').style.transform = "translate3d(0px, 0px, 0px)";
-            document.querySelector('#rain-gif').style.width = "100%";
-            document.querySelector('#rain-gif').style.removeProperty('height');
+            document.querySelector('#rain-gif-wrapper').style.transform = document.querySelector('#rain-gif-ref').style.transform;
+            document.querySelector('#rain-gif-wrapper').style.width = document.querySelector('#rain-gif-ref').style.width;
+            document.querySelector('#rain-gif-wrapper').style.zIndex = document.querySelector('#rain-gif-ref').style.zIndex;
+            document.querySelector('#rain-gif-wrapper').style.opacity = document.querySelector('#rain-gif-ref').style.opacity;
+            // update class:
+            document.querySelector('#rain-gif-wrapper').className = document.querySelector('#rain-gif-ref').className;
+
+            // ***** Map rain animation - End ***** //
+
 
             // ***** Map legend - Start ***** //
+
             // Leaftlet control for main div:
             L.Control.LegendWrapper = L.Control.extend({
                 onAdd: function(map) {
@@ -212,7 +227,9 @@
             document.getElementById('time-legend').appendChild(timeLegendBoder);
             document.getElementById('time-legend').appendChild(timeLegendImg);
             document.getElementById('map-legend').appendChild(document.getElementById('rain-legend'));
+
             // ***** Map legend - End ***** //
+            
 
             // Store view parameters in local cache so that the user can personalize the view shown after loading page:
             map.addEventListener('moveend', function(ev) {  // triggered on map move/zoom
@@ -223,36 +240,15 @@
                 localStorage.setItem("viewZoom", viewZoom);                
             });
 
+            // Dynamically update styles of my custom overlay, when styles of the reference overlay are changed:
             var observer = new MutationObserver(function(mutations) {
                 mutations.forEach(function(mutationRecord) {
-                    const imgRainGif = document.querySelector('#rain-gif');
-                    const rect = imgRainGif.getBoundingClientRect();
-                    console.log("rain-gif: ", rect.left, rect.top, rect.bottom, rect.right);
-
-                    // set wrapper style: identical to rain-gif styles:
-                    if(document.querySelector('#rain-gif').style.transform != "translate3d(0px, 0px, 0px)") {
-                        document.querySelector('#rain-gif-wrapper').style.transform = document.querySelector('#rain-gif').style.transform;
-                    }
-                    if(document.querySelector('#rain-gif').style.width != "100%") {
-                        document.querySelector('#rain-gif-wrapper').style.width = document.querySelector('#rain-gif').style.width;
-                    }
-                    // reset rain-gif styles to default:
-                    document.querySelector('#rain-gif').style.transform = "translate3d(0px, 0px, 0px)";
-                    document.querySelector('#rain-gif').style.width = "100%";
-                    document.querySelector('#rain-gif').style.removeProperty('height');
+                    // set wrapper style identical to rain-gif-ref styles:
+                    document.querySelector('#rain-gif-wrapper').style.transform = document.querySelector('#rain-gif-ref').style.transform;
+                    document.querySelector('#rain-gif-wrapper').style.width = document.querySelector('#rain-gif-ref').style.width;
                 });
             });
-
-            var target = document.getElementById('rain-gif');
-            observer.observe(target, { attributes : true, attributeFilter : ['style'] });
-
-            function printCoordinates() {
-                const div = document.querySelector('#rain-gif-wrapper');
-                const rect = div.getBoundingClientRect();
-                console.log(rect.left, rect.top, rect.bottom, rect.right);
-            }
-
-            setInterval(printCoordinates, 100);
+            observer.observe(document.getElementById('rain-gif-ref'), { attributes : true, attributeFilter : ['style'] });  // link the observer to the reference overlay
         </script>
     </body>
 </html>
