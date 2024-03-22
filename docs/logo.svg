@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="512px" height="512px" viewBox="0 0 512 512" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+  <g id="Logo_Rain">
+    <path d="M0 0L512 0L512 512L0 512L0 0Z" id="Rectangle-4" fill="none" fill-rule="evenodd" stroke="none" />
+    <g id="Cloud1" transform="translate(1 9)">
+      <path d="M120 123C120 55.069 175.069 0 243 0C310.931 0 366 55.069 366 123C366 190.931 310.931 246 243 246C175.069 246 120 190.931 120 123Z" id="Oval" fill="#C7B4EB" fill-rule="evenodd" stroke="none" />
+      <path d="M284 177.5C284 115.368 334.368 65 396.5 65C458.632 65 509 115.368 509 177.5C509 239.632 458.632 290 396.5 290C334.368 290 284 239.632 284 177.5Z" id="Oval-2" fill="#C7B4EB" fill-rule="evenodd" stroke="none" />
+      <path d="M0 200.5C0 151.071 41.1898 111 92 111C142.81 111 184 151.071 184 200.5C184 249.929 142.81 290 92 290C41.1898 290 0 249.929 0 200.5Z" id="Oval-3" fill="#C7B4EB" fill-rule="evenodd" stroke="none" />
+      <path d="M92 200L396 200L396 290L92 290L92 200Z" id="Rectangle-4" fill="#C7B4EB" fill-rule="evenodd" stroke="none" />
+    </g>
+    <g id="Cloud2" transform="matrix(-1 0 0 1 503 111)">
+      <path d="M86.5227 88.6448C86.5227 39.6876 126.229 0 175.208 0C224.188 0 263.894 39.6876 263.894 88.6448C263.894 137.602 224.188 177.29 175.208 177.29C126.229 177.29 86.5227 137.602 86.5227 88.6448Z" id="Oval" fill="#7551B5" fill-rule="evenodd" stroke="none" />
+      <path d="M204.77 127.922C204.77 83.1445 241.087 46.8448 285.885 46.8448C330.684 46.8448 367 83.1445 367 127.922C367 172.7 330.684 209 285.885 209C241.087 209 204.77 172.7 204.77 127.922Z" id="Oval-2" fill="#7551B5" fill-rule="evenodd" stroke="none" />
+      <path d="M0 144.498C0 108.875 29.6987 79.9965 66.334 79.9965C102.969 79.9965 132.668 108.875 132.668 144.498C132.668 180.122 102.969 209 66.334 209C29.6987 209 0 180.122 0 144.498Z" id="Oval-3" fill="#7551B5" fill-rule="evenodd" stroke="none" />
+      <path d="M66.334 144.138L285.525 144.138L285.525 209L66.334 209L66.334 144.138Z" id="Rectangle-4" fill="#7551B5" fill-rule="evenodd" stroke="none" />
+    </g>
+    <g id="Drops" transform="translate(107 349)">
+      <g id="Group-35">
+        <path d="M9.98779 64.6324C4.47169 53.8064 8.77618 40.5586 19.6021 35.0425C30.4281 29.5264 43.676 33.8309 49.1921 44.6568C54.7082 55.4828 50.4037 68.7307 39.5777 74.2468C28.7518 79.7629 15.5039 75.4584 9.98779 64.6324Z" id="Oval-2" fill="#C7B4EB" fill-rule="evenodd" stroke="none" />
+        <path d="M44.1124 0L11.7791 41.7316L9.08765 48.6088L50.0879 60.6091L51.4308 51.9671L44.1124 0Z" id="Vector-4" fill="#C7B4EB" fill-rule="evenodd" stroke="none" />
+      </g>
+      <g id="Group-48" transform="translate(129 0)">
+        <path d="M9.98779 64.6324C4.47169 53.8064 8.77618 40.5586 19.6021 35.0425C30.4281 29.5264 43.676 33.8309 49.1921 44.6568C54.7082 55.4828 50.4037 68.7307 39.5777 74.2468C28.7518 79.7629 15.5039 75.4584 9.98779 64.6324Z" id="Oval-2" fill="#C7B4EB" fill-rule="evenodd" stroke="none" />
+        <path d="M44.1124 0L11.7791 41.7316L9.08765 48.6088L50.0879 60.6091L51.4308 51.9671L44.1124 0Z" id="Vector-4" fill="#C7B4EB" fill-rule="evenodd" stroke="none" />
+      </g>
+      <g id="Group-49" transform="translate(263 0)">
+        <path d="M9.98779 64.6324C4.47169 53.8064 8.77618 40.5586 19.6021 35.0425C30.4281 29.5264 43.676 33.8309 49.1921 44.6568C54.7082 55.4828 50.4037 68.7307 39.5777 74.2468C28.7518 79.7629 15.5039 75.4584 9.98779 64.6324Z" id="Oval-2" fill="#C7B4EB" fill-rule="evenodd" stroke="none" />
+        <path d="M44.1124 0L11.7791 41.7316L9.08765 48.6088L50.0879 60.6091L51.4308 51.9671L44.1124 0Z" id="Vector-4" fill="#C7B4EB" fill-rule="evenodd" stroke="none" />
+      </g>
+      <g id="Group-50" transform="translate(189 78)">
+        <path d="M9.98779 64.6324C4.47169 53.8064 8.77618 40.5586 19.6021 35.0425C30.4281 29.5264 43.676 33.8309 49.1921 44.6568C54.7082 55.4828 50.4037 68.7307 39.5777 74.2468C28.7518 79.7629 15.5039 75.4584 9.98779 64.6324Z" id="Oval-2" fill="#C7B4EB" fill-rule="evenodd" stroke="none" />
+        <path d="M44.1124 0L11.7791 41.7316L9.08765 48.6088L50.0879 60.6091L51.4308 51.9671L44.1124 0Z" id="Vector-4" fill="#C7B4EB" fill-rule="evenodd" stroke="none" />
+      </g>
+      <g id="Group-51" transform="translate(55 78)">
+        <path d="M9.98779 64.6324C4.47169 53.8064 8.77618 40.5586 19.6021 35.0425C30.4281 29.5264 43.676 33.8309 49.1921 44.6568C54.7082 55.4828 50.4037 68.7307 39.5777 74.2468C28.7518 79.7629 15.5039 75.4584 9.98779 64.6324Z" id="Oval-2" fill="#C7B4EB" fill-rule="evenodd" stroke="none" />
+        <path d="M44.1124 0L11.7791 41.7316L9.08765 48.6088L50.0879 60.6091L51.4308 51.9671L44.1124 0Z" id="Vector-4" fill="#C7B4EB" fill-rule="evenodd" stroke="none" />
+      </g>
+    </g>
+  </g>
+</svg>
