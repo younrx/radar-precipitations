@@ -23,9 +23,9 @@
         <meta property="og:description" content="Carte des précipitations en France" />
 
         <!-- Styles: -->
-        <link rel="stylesheet" href="/styles/reset.css" />
+        <link rel="stylesheet" href="styles/reset.css" />
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-        <link rel="stylesheet" href="/styles/map_rain.css" />
+        <link rel="stylesheet" href="styles/map_rain.css" />
         <style>
             /* MY CUSTOM STYLES - Start */
             body {
@@ -46,11 +46,11 @@
 
         <!-- Scripts: -->
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-        <script src="/scripts/map_rain.js"></script>
+        <script src="scripts/map_rain.js"></script>
         <script>
             // Register service worker:
             if ("serviceWorker" in navigator) {
-                navigator.serviceWorker.register("/scripts/sw.js").then(
+                navigator.serviceWorker.register("scripts/sw.js").then(
                     (registration) => {
                         console.log("Service worker registration successful:", registration);
                     },
