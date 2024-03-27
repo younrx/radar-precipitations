@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
     <head>
         <meta charset="UTF-8" /> <!-- define the character set used for this page -->
         <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <!-- define visible area of the web page -->
@@ -10,7 +10,7 @@
         <link rel="manifest" href="manifest.json" />
 
         <!-- Open Graph -->
-        <meta property="og:locale" content="fr_F" />
+        <meta property="og:locale" content="fr_FR" />
         <meta property="og:title" content="Radar précipitations" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://younrx.github.io/radar-precipitations/" />
@@ -24,23 +24,12 @@
 
         <!-- Styles: -->
         <link rel="stylesheet" href="styles/reset.css" />
+        <link rel="stylesheet" href="styles/app.css" />
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
         <link rel="stylesheet" href="styles/map_rain.css" />
-        <style>
-            /* MY CUSTOM STYLES - Start */
-            body {
-                background-color: #0c376d;
-            }
-            #main {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
-            /* MY CUSTOM STYLES - End */
-        </style>
     </head>
     <body>
-        <div id="main">
+        <div id="main">            
             <div id="map"></div>
         </div>
 
@@ -50,7 +39,7 @@
         <script>
             // Register service worker:
             if ("serviceWorker" in navigator) {
-                navigator.serviceWorker.register("scripts/sw.js").then(
+                navigator.serviceWorker.register("sw.js").then(
                     (registration) => {
                         console.log("Service worker registration successful:", registration);
                     },
