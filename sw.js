@@ -57,11 +57,7 @@ self.addEventListener("fetch", (event) => {
         event.respondWith(
             (async () => {
                 try {
-                    // Respond from the cache if we can
-                    const cachedResponse = await caches.match(event.request);
-                    if (cachedResponse) return cachedResponse;
-
-                    // Else try the network.
+                    // Fetch from the network:
                     return fetch(event.request);
                 } catch (error) {
                     // catch is only triggered if an exception is thrown, which is likely due to a network error.
