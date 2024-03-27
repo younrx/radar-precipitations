@@ -1,10 +1,10 @@
 // SERVICE WORKER FILE
 
-const VERSION = "1.2.3"; // Version number to update when a change is made to the app
+const VERSION = "1.3.0"; // Version number to update when a change is made to the app
 const CACHE_NAME = `rainfall-${VERSION}`; // Cache name based on version to ensure a new cache will be created (and the old one will be deleted) on version update
-const OFFLINE_URL = "/radar-precipitations/pages/offline_fallback.html";
 
 // resources needed when offline:
+const OFFLINE_URL = "/radar-precipitations/pages/offline_fallback.html";
 const APP_STATIC_RESOURCES = [
     "/radar-precipitations/",
     "/radar-precipitations/sw.js",
