@@ -131,8 +131,18 @@
                     // Unable to connect to the server, ignore.
                 }
             }
+
+            // Refresh when page has just been set visible:
+            document.addEventListener("visibilitychange", function() {
+                if (!document.hidden){ // i.e. if the page displayed is the current app
+                    window.location.reload(true); // force refresh
+                }
+            });
+            // Refresh repeatedly when page is visible:
             setInterval(() => {
-                checkNetworkAndReload();
+                if (document.visibilityState == "visible"){
+                    checkNetworkAndReload();
+                }
             }, 2500); // Check for status every 2.5 sec
       </script>
     </body>
