@@ -1,14 +1,20 @@
 // SERVICE WORKER FILE
 
-const VERSION = "1.0.0"; // Version number to update when a change is made to the app
+const VERSION = "1.1.0"; // Version number to update when a change is made to the app
 const CACHE_NAME = `rainfall-${VERSION}`; // Cache name based on version to ensure a new cache will be created (and the old one will be deleted) on version update
 
 // resources needed when offline:
 const APP_STATIC_RESOURCES = [
     "/",
     "/index.html",
+    "/styles/reset.css",
+    "/styles/map_rain.css",
+    "/scripts/map_rain.js",
     "/static/icons/icon512.svg",
+    "/static/icons/icon512.png",
     "/static/icons/icon512_maskable.svg",
+    "/static/icons/icon512_maskable.png",
+    "/static/images/rain_levels.png",
 ];
 
 // Create cache on  'install' event:
