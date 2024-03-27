@@ -6,274 +6,61 @@
         <meta name="description" content="Carte des précipitations en France" />
         <title>Radar précipitations</title>
         <link rel="icon" href="favicon.ico" />
-        <link rel="apple-touch-icon" href="logo512.png" />
+        <link rel="apple-touch-icon" href="static/icons/icon512_maskable.png" />
+        <link rel="manifest" href="manifest.json" />
 
         <!-- Open Graph -->
         <meta property="og:locale" content="fr_F" />
         <meta property="og:title" content="Radar précipitations" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://younrx.github.io/radar-precipitations/" />
-        <meta property="og:image" content="logo512.png" />
+        <meta property="og:image" content="static/icons/icon512_maskable.png" />
         <meta property="og:image:type" content="image/png" />
         <meta property="og:image:width" content="512" />
         <meta property="og:image:height" content="512" />
-        <meta property="og:image:alt" content="Logo radar précipitations" />
+        <meta property="og:image:alt" content="App icon" />
         <meta property="og:site_name" content="Radar précipitations" />
         <meta property="og:description" content="Carte des précipitations en France" />
 
-        <link
-            rel="stylesheet"
-            href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-            integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-            crossorigin=""
-        />
-
+        <!-- Styles: -->
+        <link rel="stylesheet" href="/styles/reset.css" />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+        <link rel="stylesheet" href="/styles/map_rain.css" />
         <style>
-            /* http://meyerweb.com/eric/tools/css/reset/ 
-            v2.0 | 20110126
-            License: none (public domain)
-            */
-
-            html, body, div, span, applet, object, iframe,
-            h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-            a, abbr, acronym, address, big, cite, code,
-            del, dfn, em, img, ins, kbd, q, s, samp,
-            small, strike, strong, sub, sup, tt, var,
-            b, u, i, center,
-            dl, dt, dd, ol, ul, li,
-            fieldset, form, label, legend,
-            table, caption, tbody, tfoot, thead, tr, th, td,
-            article, aside, canvas, details, embed, 
-            figure, figcaption, footer, header, hgroup, 
-            menu, nav, output, ruby, section, summary,
-            time, mark, audio, video {
-                margin: 0;
-                padding: 0;
-                border: 0;
-                font-size: 100%;
-                font: inherit;
-                vertical-align: baseline;
-            }
-            /* HTML5 display-role reset for older browsers */
-            article, aside, details, figcaption, figure, 
-            footer, header, hgroup, menu, nav, section {
-                display: block;
-            }
-            body {
-                line-height: 1;
-            }
-            ol, ul {
-                list-style: none;
-            }
-            blockquote, q {
-                quotes: none;
-            }
-            blockquote:before, blockquote:after,
-            q:before, q:after {
-                content: '';
-                content: none;
-            }
-            table {
-                border-collapse: collapse;
-                border-spacing: 0;
-            }
-
             /* MY CUSTOM STYLES - Start */
+            body {
+                background-color: #0c376d;
+            }
             #main {
                 display: flex;
                 justify-content: center;
                 align-items: center;
             }
-            #map {
-                width: 100dvw;
-                height: 100dvh;
-            }
-            div.leaflet-left:has(> #map-legend) {
-                padding: 0;
-                margin: 0;
-                left: 50%;
-                transform: translate(-50%, 0%);
-            }
-            #map-legend {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                width: 400px;
-                margin-left: 0;
-            }
-            #rain-legend {
-                width: 100%;
-                margin-left: 0;
-            }
-            #time-legend {
-                width: 100%;
-                aspect-ratio: 450/24;  /* value extracted from gif image size. It asumes the gif image size never change */
-                overflow: hidden;
-            }
-            #time-legend img {
-                width: 218.888888%;  /* value extracted from gif image size. It asumes the gif image size never change */
-                transform: translate(-27.106598%, -97.272727%);  /* value extracted from gif image size. It asumes the gif image size never change */
-                z-index: -1;
-            }
-            #rain-gif-wrapper {
-                aspect-ratio: 985/850;
-                overflow: hidden;
-            }
-            #rain-gif {
-                width: 100%;
-            }
-            #rain-gif-ref {
-                visibility: hidden;
-            }
-            /* For small screens: */
-            @media (width <= 640px) {
-                #map-legend {
-                    width: 90dvw;
-                }
-                /* Hide rain blue pixels when time bar is not perfectly resized - Start */
-                #time-legend {
-                    position: relative;
-                }
-                #time-legend img {
-                    position: relative;
-                }
-                #time-legend-border {
-                    position: absolute;
-                    width: 100%;
-                    height: 100%;
-                    box-shadow: 0 0 0 1px #fff inset;
-                }
-                /* Hide rain blue pixels when time bar is not perfectly resized - End */
-            }
             /* MY CUSTOM STYLES - End */
         </style>
     </head>
     <body>
-        <script
-            src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-            crossorigin="">
-        </script>
-
         <div id="main">
             <div id="map"></div>
         </div>
 
+        <!-- Scripts: -->
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+        <script src="/scripts/map_rain.js"></script>
         <script>
-            const rainGifImageSource = "https://www.meteo60.fr/radars/animation-radars-france.gif";
-
-            // Creating a map object:
-            let map = new L.map("map", { zoomControl: false, zoomSnap: 0.1, attributionControl: false });
-
-            // Define view parameters to apply:
-            let viewCoordinatesDefault = {lat: 46.85, lng: 1.37};  // default view coordinates
-            let viewDefaultZoom = 6;  // default view zoom
-            if (window.screen.width <= 640) { viewDefaultZoom = 5; }  // smaller zoom on small screens
-            // Read cache:
-            const viewCoordinatesLat = localStorage.getItem("viewCoordinatesLat") != null ? localStorage.getItem("viewCoordinatesLat") : viewCoordinatesDefault.lat;
-            const viewCoordinatesLng = localStorage.getItem("viewCoordinatesLng") != null ? localStorage.getItem("viewCoordinatesLng") : viewCoordinatesDefault.lng;
-            const viewZoom = localStorage.getItem("viewZoom") != null ? localStorage.getItem("viewZoom") : viewDefaultZoom;
-            // apply view parameters:
-            map.setView({lat: viewCoordinatesLat, lng: viewCoordinatesLng});
-            map.setZoom(viewZoom);
-
-            // Creating a Layer object for the map tiles:
-            let layer = new L.TileLayer(
-                "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            ).addTo(map);
-
-
-            // ***** Map rain animation - Start ***** //
-
-            // Add an overlay of the rain gif image as reference:
-            let latLngBounds = L.latLngBounds([[40.92, -7.94], [52.18, 10.52]]);
-            let rainImageOverlayRef = L.imageOverlay(
-                rainGifImageSource,
-                latLngBounds,
-                { opacity: 0.7 }
-            );
-            rainImageOverlayRef.addTo(map);
-            rainImageOverlayRef.getElement().id = "rain-gif-ref";
-
-            // Create a custom overlay, which is an image in a div with the same styles than the reference overlay:
-            // generate the div:
-            let rainImageOverlayWrapper = document.createElement('div');
-            rainImageOverlayWrapper.id = "rain-gif-wrapper";
-            // generate the image:
-            let rainImageOverlay = document.createElement('img');
-            rainImageOverlay.id = "rain-gif";
-            rainImageOverlay.src = rainGifImageSource;
-            // insert elements in DOM (right next to the reference overlay):
-            document.querySelector("div.leaflet-pane:has(> #rain-gif-ref)").appendChild(rainImageOverlayWrapper);
-            document.querySelector("#rain-gif-wrapper").appendChild(rainImageOverlay);
-            // update styles:
-            document.querySelector('#rain-gif-wrapper').style.transform = document.querySelector('#rain-gif-ref').style.transform;
-            document.querySelector('#rain-gif-wrapper').style.width = document.querySelector('#rain-gif-ref').style.width;
-            document.querySelector('#rain-gif-wrapper').style.zIndex = document.querySelector('#rain-gif-ref').style.zIndex;
-            document.querySelector('#rain-gif-wrapper').style.opacity = document.querySelector('#rain-gif-ref').style.opacity;
-            // update class:
-            document.querySelector('#rain-gif-wrapper').className = document.querySelector('#rain-gif-ref').className;
-
-            // ***** Map rain animation - End ***** //
-
-
-            // ***** Map legend - Start ***** //
-
-            // Leaftlet control for main div:
-            L.Control.LegendWrapper = L.Control.extend({
-                onAdd: function(map) {
-                    let div = L.DomUtil.create('div');
-                    div.id = 'map-legend';
-                    return div;
-                }
-            });
-            // Leaftlet control for rain scale:            
-            L.Control.RainLegend = L.Control.extend({
-                onAdd: function(map) {
-                    let img = L.DomUtil.create('img');
-                    img.id = 'rain-legend';
-                    img.src = "./static/rain_levels.png";
-                    return img;
-                }
-            });
-            // add elements into map:
-            const legendDiv = new L.Control.LegendWrapper({ position: 'bottomleft' });
-            const rainLegend = new L.Control.RainLegend();
-            legendDiv.addTo(map);
-            rainLegend.addTo(map);
-            // place sub-elements into map-legend:
-            let timeLegend = document.createElement('div');
-            timeLegend.id = "time-legend";
-            let timeLegendImg = document.createElement('img');
-            timeLegendImg.src = rainGifImageSource;
-            let timeLegendBoder = document.createElement('div');  // border to hide rain blue pixels when resizing is not exactly perfect (on small screens)
-            timeLegendBoder.id = "time-legend-border";
-            document.getElementById('map-legend').appendChild(timeLegend);
-            document.getElementById('time-legend').appendChild(timeLegendBoder);
-            document.getElementById('time-legend').appendChild(timeLegendImg);
-            document.getElementById('map-legend').appendChild(document.getElementById('rain-legend'));
-
-            // ***** Map legend - End ***** //
-
-
-            // Store view parameters in local cache so that the user can personalize the view shown after loading page:
-            map.addEventListener('moveend', function(ev) {  // triggered on map move/zoom
-                const viewCoordinates = map.getCenter();
-                const viewZoom = map.getZoom();
-                localStorage.setItem("viewCoordinatesLat", viewCoordinates.lat);
-                localStorage.setItem("viewCoordinatesLng", viewCoordinates.lng);
-                localStorage.setItem("viewZoom", viewZoom);                
-            });
-
-            // Dynamically update styles of my custom overlay, when styles of the reference overlay are changed:
-            var observer = new MutationObserver(function(mutations) {
-                mutations.forEach(function(mutationRecord) {
-                    // set wrapper style identical to rain-gif-ref styles:
-                    document.querySelector('#rain-gif-wrapper').style.transform = document.querySelector('#rain-gif-ref').style.transform;
-                    document.querySelector('#rain-gif-wrapper').style.width = document.querySelector('#rain-gif-ref').style.width;
-                });
-            });
-            observer.observe(document.getElementById('rain-gif-ref'), { attributes : true, attributeFilter : ['style'] });  // link the observer to the reference overlay
+            // Register service worker:
+            if ("serviceWorker" in navigator) {
+                navigator.serviceWorker.register("/scripts/sw.js").then(
+                    (registration) => {
+                        console.log("Service worker registration successful:", registration);
+                    },
+                    (error) => {
+                        console.error(`Service worker registration failed: ${error}`);
+                    }
+                );
+            } else {
+                console.error("Service workers are not supported.");
+            }
         </script>
     </body>
 </html>

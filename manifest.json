@@ -1,0 +1,36 @@
+{
+    "name": "Radar précipitations",
+    "short_name": "Radar Pluie",
+    "description": "Carte des précipitations en France.",
+    "id": "/",
+    "start_url": "/",
+    "theme_color": "#0C376D",
+    "background_color": "#0C376D",
+    "display": "standalone",
+    "icons": [
+        {
+            "src": "static/icons/icon512.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any"
+        },
+        {
+            "src": "static/icons/icon512_maskable.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "maskable"
+        },
+        {
+            "src": "static/icons/icon512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "static/icons/icon512_maskable.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}
