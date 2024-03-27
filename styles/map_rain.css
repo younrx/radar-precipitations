@@ -1,0 +1,61 @@
+#map {
+    width: 100dvw;
+    height: 100dvh;
+}
+div.leaflet-left:has(> #map-legend) {
+    padding: 0;
+    margin: 0;
+    left: 50%;
+    transform: translate(-50%, 0%);
+}
+#map-legend {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 400px;
+    margin-left: 0;
+}
+#rain-legend {
+    width: 100%;
+    margin-left: 0;
+}
+#time-legend {
+    width: 100%;
+    aspect-ratio: 450/24; /* value extracted from gif image size. It asumes the gif image size never change */
+    overflow: hidden;
+}
+#time-legend img {
+    width: 218.888888%; /* value extracted from gif image size. It asumes the gif image size never change */
+    transform: translate(-27.106598%, -97.272727%); /* value extracted from gif image size. It asumes the gif image size never change */
+    z-index: -1;
+}
+#rain-gif-wrapper {
+    aspect-ratio: 985/850;
+    overflow: hidden;
+}
+#rain-gif {
+    width: 100%;
+}
+#rain-gif-ref {
+    visibility: hidden;
+}
+/* For small screens: */
+@media (width <= 640px) {
+    #map-legend {
+        width: 90dvw;
+    }
+    /* Hide rain blue pixels when time bar is not perfectly resized - Start */
+    #time-legend {
+        position: relative;
+    }
+    #time-legend img {
+        position: relative;
+    }
+    #time-legend-border {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        box-shadow: 0 0 0 1px #fff inset;
+    }
+    /* Hide rain blue pixels when time bar is not perfectly resized - End */
+}
