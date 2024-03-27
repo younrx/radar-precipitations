@@ -5,9 +5,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <!-- define visible area of the web page -->
         <meta name="description" content="Carte des précipitations en France" />
         <title>Radar Précipitations</title>
-        <link rel="icon" href="favicon.ico" />
-        <link rel="apple-touch-icon" href="static/icons/icon512_maskable.png" />
-        <link rel="manifest" href="manifest.json" />
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/static/icons/icon512_maskable.png" />
+        <link rel="manifest" href="/manifest.json" />
 
         <!-- Styles: -->
         <style>
@@ -98,6 +98,16 @@
                 white-space: nowrap;
                 font-size: large;
             }
+            #refresh-button {
+                margin-top: 20px;
+                border-radius: 5px;
+                border: 1px solid #395a81;
+                background-color: #c2d0e0;
+                color: black;
+            }
+            #refresh-button:hover {
+                cursor: pointer;
+            }
         </style>
     </head>
     <body>
@@ -111,6 +121,7 @@
                 <div id="errorContainer">
                     <span class="message">Vous êtes hors connexion</span>
                 </div>
+                <button id="refresh-button" onclick="window.location.reload(true)">Actualiser</button>
             </div>
         </div>
 
@@ -133,7 +144,7 @@
             }
             setInterval(() => {
                 checkNetworkAndReload();
-            }, 2500); // Check for update every minute
+            }, 2500); // Check for status every 2.5 sec
       </script>
     </body>
 </html>
