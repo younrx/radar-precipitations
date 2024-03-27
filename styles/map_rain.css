@@ -48,6 +48,9 @@ div.leaflet-left:has(> #map-legend) {
     border: none;
     box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.5);
 }
+#refresh-button:hover {
+    cursor: pointer;
+}
 div.leaflet-left:has(> #div-refresh-button) {
     padding: 0;
     margin: 0;

@@ -135,6 +135,11 @@ function addRefreshButton(map) {
             document.getElementById("div-refresh-button").className = "leaflet-control refresh-button-hidden";
         }, 2000);
     });
+    // Perform action on button click:
+    document.getElementById("div-refresh-button").addEventListener("click", function (ev) {
+        // triggered on map move/zoom
+        window.location.reload(true); // force refresh
+    });
 }
 
 
