@@ -1,23 +1,20 @@
 // SERVICE WORKER FILE
 
-const VERSION = "1.2.0"; // Version number to update when a change is made to the app
+const VERSION = "1.2.1"; // Version number to update when a change is made to the app
 const CACHE_NAME = `rainfall-${VERSION}`; // Cache name based on version to ensure a new cache will be created (and the old one will be deleted) on version update
 const OFFLINE_URL = "/radar-precipitations/pages/offline_fallback.html";
 
 // resources needed when offline:
 const APP_STATIC_RESOURCES = [
     "/radar-precipitations/",
-    OFFLINE_URL,
-    // "/radar-precipitations/index.html",
+    "/radar-precipitations/favicon.ico",
     "/radar-precipitations/styles/reset.css",
     "/radar-precipitations/styles/app.css",
-    // "/radar-precipitations/styles/map_rain.css",
-    // "/radar-precipitations/scripts/map_rain.js",
     "/radar-precipitations/static/icons/icon512.svg",
     "/radar-precipitations/static/icons/icon512.png",
     "/radar-precipitations/static/icons/icon512_maskable.svg",
     "/radar-precipitations/static/icons/icon512_maskable.png",
-    // "/radar-precipitations/static/images/rain_levels.png",
+    OFFLINE_URL,
 ];
 
 // Create cache on  'install' event:
@@ -46,6 +43,11 @@ self.addEventListener("activate", (event) => {
                 })
             );
             await clients.claim(); // enable our service worker to set itself as the controller for the current running instance of the PWA.
+            // Enable navigation preload if it's supported.
+            // See https://developers.google.com/web/updates/2017/02/navigation-preload
+            if ("navigationPreload" in self.registration) {
+                await self.registration.navigationPreload.enable();
+            }
         })()
     );
 });
@@ -60,20 +62,21 @@ self.addEventListener("fetch", (event) => {
         event.respondWith(
             (async () => {
                 try {
-                    // First, try to use the navigation preload response if it's supported.
-                    const preloadResponse = await event.preloadResponse;
-                    if (preloadResponse) {
-                        return preloadResponse;
-                    }
+                    // Respond from the cache if we can
+                    const cachedResponse = await caches.match(event.request);
+                    if (cachedResponse) return cachedResponse;
 
-                    // Always try the network first.
-                    const networkResponse = await fetch(event.request);
-                    return networkResponse;
+                    // Else, use the preloaded response, if it's there
+                    const response = await event.preloadResponse;
+                    if (response) return response;
+
+                    // Else try the network.
+                    return fetch(event.request);
                 } catch (error) {
                     // catch is only triggered if an exception is thrown, which is likely due to a network error.
                     // If fetch() returns a valid HTTP response with a response code in the 4xx or 5xx range, the catch() will NOT be called.
+                    // When no network, we display the falback page:
                     console.error("Fetch failed; returning offline page instead.", error);
-
                     const cache = await caches.open(CACHE_NAME);
                     const cachedResponse = await cache.match(OFFLINE_URL);
                     return cachedResponse;
