@@ -43,11 +43,6 @@ self.addEventListener("activate", (event) => {
                 })
             );
             await clients.claim(); // enable our service worker to set itself as the controller for the current running instance of the PWA.
-            // Enable navigation preload if it's supported.
-            // See https://developers.google.com/web/updates/2017/02/navigation-preload
-            if ("navigationPreload" in self.registration) {
-                await self.registration.navigationPreload.enable();
-            }
         })()
     );
 });
@@ -62,15 +57,7 @@ self.addEventListener("fetch", (event) => {
         event.respondWith(
             (async () => {
                 try {
-                    // Respond from the cache if we can
-                    const cachedResponse = await caches.match(event.request);
-                    if (cachedResponse) return cachedResponse;
-
-                    // Else, use the preloaded response, if it's there
-                    const response = await event.preloadResponse;
-                    if (response) return response;
-
-                    // Else try the network.
+                    // Fetch from the network:
                     return fetch(event.request);
                 } catch (error) {
                     // catch is only triggered if an exception is thrown, which is likely due to a network error.
