@@ -109,6 +109,39 @@ function displayRain(map, rainGifImageSource) {
     }); // link the observer to the reference overlay
 }
 
+function addRefreshButton(map) {
+    L.Control.LegendWrapper = L.Control.extend({
+        onAdd: function (map) {
+            let divBut = L.DomUtil.create("div");
+            divBut.id = "div-refresh-button";
+            divBut.className += "refresh-button-hidden";
+            return divBut;
+        },
+    });
+    const divBut = new L.Control.LegendWrapper({ position: "topleft" });
+    divBut.addTo(map);
+    const refreshBut = document.querySelector("#refresh-button");
+    document.getElementById("div-refresh-button").appendChild(refreshBut);
+
+    // Make button appear on map move:
+    map.addEventListener("movestart", function (ev) {
+        // triggered on map move/zoom
+        document.getElementById("div-refresh-button").className = "leaflet-control refresh-button-visible";
+    });
+    // Make button disappear after map move:
+    map.addEventListener("moveend", function (ev) {
+        // triggered on map move/zoom
+        setTimeout(() => {
+            document.getElementById("div-refresh-button").className = "leaflet-control refresh-button-hidden";
+        }, 2000);
+    });
+    // Perform action on button click:
+    document.getElementById("div-refresh-button").addEventListener("click", function (ev) {
+        // triggered on map move/zoom
+        window.location.reload(true); // force refresh
+    });
+}
+
 
 // Actions to perform when the document is loaded:
 document.addEventListener("DOMContentLoaded", () => {
@@ -126,6 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // display rain:
     const rainGifImageSource = "https://www.meteo60.fr/radars/animation-radars-france.gif";
     displayRain(map, rainGifImageSource);
+    addRefreshButton(map);
 
     // Refresh page to update rain data every time the user opens the tab page:
     document.addEventListener("visibilitychange", function() {

@@ -39,6 +39,34 @@ div.leaflet-left:has(> #map-legend) {
 #rain-gif-ref {
     visibility: hidden;
 }
+#refresh-button {
+    width: 40px;
+    height: 40px;
+    padding: 10px;
+    background-color: #0c376d;
+    border-radius: 50%;
+    border: none;
+    box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.5);
+}
+#refresh-button:hover {
+    cursor: pointer;
+}
+div.leaflet-left:has(> #div-refresh-button) {
+    padding: 0;
+    margin: 0;
+    left: 50%;
+    transform: translate(-50%, 0%);
+}
+#div-refresh-button.refresh-button-hidden {
+    top: -80px;
+    transition-property: top;
+    transition-duration: 300ms;
+}
+#div-refresh-button.refresh-button-visible {
+    top: 20px;
+    transition-property: top;
+    transition-duration: 300ms;
+}
 /* For small screens: */
 @media (width <= 640px) {
     #map-legend {
