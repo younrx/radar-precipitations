@@ -127,12 +127,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const rainGifImageSource = "https://www.meteo60.fr/radars/animation-radars-france.gif";
     displayRain(map, rainGifImageSource);
 
-    // Update routine:
-    setInterval(() => {
-        // Update rain data every 5 minutes:
-        const date = new Date();
-        if (date.getMinutes() % 5 == 0) {
+    // Refresh page to update rain data every time the user opens the tab page:
+    document.addEventListener("visibilitychange", function() {
+        if (!document.hidden){ // i.e. if the page displayed is the current app
             window.location.reload(true); // force refresh
         }
-    }, 60 * 1000); // Check for update every minute
+     });
 });
