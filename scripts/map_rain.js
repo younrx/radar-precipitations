@@ -139,7 +139,40 @@ function addRefreshButton(map) {
     document.getElementById("div-refresh-button").addEventListener("click", function (ev) {
         // triggered on map move/zoom
         window.location.reload(true); // force refresh
+        ev.stopPropagation();
     });
+}
+
+function displayMarker(map, coordinates) {
+    // show marker on map:
+    const markerIcon = L.icon({
+        iconUrl: `static/images/pin.svg`,
+        shadowUrl: `static/images/marker-shadow.png`,
+        iconSize: [21.5, 38.25], // size of the icon
+        shadowSize: [40, 40],
+        iconAnchor: [10.75, 38.25], // point of the icon which will correspond to marker's location
+      });
+    new L.marker(coordinates, {icon: markerIcon}).addTo(map);
+}
+
+function addMarker(map, coordinates) {
+    displayMarker(map, coordinates);
+    // store marker in cache:
+    const marker = {'lat': coordinates.lat, 'lng': coordinates.lng};  // TODO: add 'name', 'city', 'weatherUrl'
+    let markers = localStorage.getItem("markers") != null ? JSON.parse(localStorage.getItem("markers")) : [];
+    markers.push(marker);
+    localStorage.setItem("markers", JSON.stringify(markers));
+}
+
+function deleteMarker() {
+    // TODO
+}
+
+function loadMarkers(map) {
+    const markers = localStorage.getItem("markers") != null ? JSON.parse(localStorage.getItem("markers")) : [];
+    for(const marker of markers) {
+        displayMarker(map, [marker.lat, marker.lng]);
+    }
 }
 
 
@@ -155,6 +188,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // update view:
     setMapView(map);
+    loadMarkers(map);
 
     // display rain:
     const rainGifImageSource = "https://www.meteo60.fr/radars/animation-radars-france.gif";
@@ -166,5 +200,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!document.hidden){ // i.e. if the page displayed is the current app
             window.location.reload(true); // force refresh
         }
-     });
+    });
+
+    // Create markers on user click:
+    map.addEventListener('click', function(ev) {
+        addMarker(map, ev.latlng);
+        ev.originalEvent.stopPropagation();
+    });
 });
