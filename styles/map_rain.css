@@ -14,6 +14,10 @@ div.leaflet-left:has(> #map-legend) {
     align-items: center;
     width: 400px;
     margin-left: 0;
+    margin-bottom: 10px;
+}
+#map-legend a {
+    color: white;
 }
 #rain-legend {
     width: 100%;
@@ -28,6 +32,13 @@ div.leaflet-left:has(> #map-legend) {
     width: 218.888888%; /* value extracted from gif image size. It asumes the gif image size never change */
     transform: translate(-27.106598%, -97.272727%); /* value extracted from gif image size. It asumes the gif image size never change */
     z-index: -1;
+}
+#marker-legend-div {
+    width: 100%;
+    height: 150px;
+    background-color: #0c376d;
+    border: solid 2px #06254c;
+    border-radius: 10px;
 }
 #rain-gif-wrapper {
     aspect-ratio: 985/850;
@@ -71,6 +82,7 @@ div.leaflet-left:has(> #div-refresh-button) {
 @media (width <= 640px) {
     #map-legend {
         width: 90dvw;
+        margin-bottom: 0;
     }
     /* Hide rain blue pixels when time bar is not perfectly resized - Start */
     #time-legend {
@@ -86,4 +98,11 @@ div.leaflet-left:has(> #div-refresh-button) {
         box-shadow: 0 0 0 1px #fff inset;
     }
     /* Hide rain blue pixels when time bar is not perfectly resized - End */
+
+    #marker-legend-div {
+        width: 100vw;
+        margin-bottom: 0;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
 }

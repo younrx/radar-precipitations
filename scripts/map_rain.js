@@ -162,6 +162,22 @@ function displayMarkerDetails(lat, lng) {
     for(let i=0; i<markers.length; i++) {
         if(markers[i].lat === lat && markers[i].lng === lng) {
             console.log(markers[i]);
+            const legendDiv = document.getElementById("map-legend");
+            const markerLegendDivId = "marker-legend-div";
+            if(!document.getElementById(markerLegendDivId)) {
+                let markerLegendDiv = document.createElement("div");
+                markerLegendDiv.id = markerLegendDivId;
+                let markerLegendFullAddress = document.createElement("p");
+                markerLegendFullAddress.textContent = `${markers[i].address}, ${markers[i].postcode}, ${markers[i].city}`;
+                let markerLegendUrl = document.createElement("a");
+                const cityTextForUrl = `${markers[i].city.toLowerCase().replace(' ', '+')}+${markers[i].postcode}`;
+                markerLegendUrl.textContent = "Previsions météo";
+                markerLegendUrl.href = `https://www.meteociel.fr/prevville.php?action=getville&ville=${cityTextForUrl}&envoyer=OK`;
+                markerLegendUrl.target = "_blank";
+                legendDiv.appendChild(markerLegendDiv);
+                markerLegendDiv.appendChild(markerLegendFullAddress);
+                markerLegendDiv.appendChild(markerLegendUrl);
+            }
         }
     }
 }
