@@ -143,6 +143,7 @@ function addRefreshButton(map) {
     });
 }
 
+/*** Marker functions ***/
 function displayMarker(map, coordinates) {
     // show marker on map:
     const markerIcon = L.icon({
@@ -152,9 +153,18 @@ function displayMarker(map, coordinates) {
         shadowSize: [40, 40],
         iconAnchor: [10.75, 38.25], // point of the icon which will correspond to marker's location
       });
-    new L.marker(coordinates, {icon: markerIcon}).addTo(map);
+    L.marker(coordinates, {icon: markerIcon}).addTo(map).on('click', function(ev) {
+        displayMarkerDetails(ev.latlng.lat, ev.latlng.lng);
+    });
 }
-
+function displayMarkerDetails(lat, lng) {
+    let markers = localStorage.getItem("markers") != null ? JSON.parse(localStorage.getItem("markers")) : [];
+    for(let i=0; i<markers.length; i++) {
+        if(markers[i].lat === lat && markers[i].lng === lng) {
+            console.log(markers[i]);
+        }
+    }
+}
 function addMarker(map, coordinates) {
     displayMarker(map, coordinates);
     // store marker in cache:
@@ -162,17 +172,48 @@ function addMarker(map, coordinates) {
     let markers = localStorage.getItem("markers") != null ? JSON.parse(localStorage.getItem("markers")) : [];
     markers.push(marker);
     localStorage.setItem("markers", JSON.stringify(markers));
+    // reverse location from coordinates:
+    getLocation(coordinates.lat, coordinates.lng).then(
+        // success callback:
+        (locationData) => {
+            if(locationData) {
+                updateMarker(coordinates.lat, coordinates.lng, locationData);
+            }
+        },
+        // failure callback:
+        () => {
+            console.error(`Failed to reverse location of point ${coordinates.lat}, ${coordinates.lng}`);
+        });
 }
-
+function updateMarker(lat, lng, data) {
+    let markers = localStorage.getItem("markers") != null ? JSON.parse(localStorage.getItem("markers")) : [];
+    for(let i=0; i<markers.length; i++) {
+        if(markers[i].lat === lat && markers[i].lng === lng) {
+            Object.assign(markers[i], data);  // merge marker and data dicts
+        }
+    }
+    localStorage.setItem("markers", JSON.stringify(markers));
+}
 function deleteMarker() {
     // TODO
 }
-
 function loadMarkers(map) {
     const markers = localStorage.getItem("markers") != null ? JSON.parse(localStorage.getItem("markers")) : [];
     for(const marker of markers) {
         displayMarker(map, [marker.lat, marker.lng]);
     }
+}
+async function getLocation(lat, lng) {
+    const response = await fetch(`https://api-adresse.data.gouv.fr/reverse/?lat=${lat}&lon=${lng}&limit=1`);
+    const rawData = await response.json(); // extract JSON from the http response
+    if(rawData.features?.length) {
+        return {
+            'city': rawData.features[0].properties.city,
+            'postcode': rawData.features[0].properties.postcode,
+            'address': rawData.features[0].properties.name,
+        }
+    }
+    return null;
 }
 
 
@@ -203,7 +244,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Create markers on user click:
-    map.addEventListener('click', function(ev) {
+    map.addEventListener('click', async function(ev) {
         addMarker(map, ev.latlng);
         ev.originalEvent.stopPropagation();
     });
