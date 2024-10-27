@@ -24,7 +24,13 @@ class LocalStorageMarkers {
 
     static remove(marker) {
         let markers = localStorage.getItem(LocalStorageMarkers.localStorageKey) != null ? JSON.parse(localStorage.getItem(LocalStorageMarkers.localStorageKey)) : [];
-        const index = array.indexOf(marker.asDict());
+        let index = -1;
+        for (let i=0; i < markers.length; i++) {
+            if (markers[i].lat === marker.lat && markers[i].lng === marker.lng) {
+                index = i;
+                break;
+            }
+        }
         if (index > -1) { // only splice array when item is found
             markers.splice(index, 1); // 2nd parameter means remove one item only
         }
@@ -36,6 +42,11 @@ function _prepareText(text) {
     return text.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase().replace(' ', '+')
 }
 
+/* Round number to 4 decimals */
+function roundNumber(number) {
+    return Math.round((number + Number.EPSILON) * 10000) / 10000;
+}
+
 export class Marker {
     constructor(map, lat, lng) {
         this.lat = lat;
@@ -43,7 +54,7 @@ export class Marker {
         this.map = map;
         this.id = `${this.lat};${this.lng}`;
         this.leafletMarker = L.marker([lat, lng], {icon: MARKER_ICON});
-        this.location = '';
+        this.location = {};
         // reverse location from coordinates:
         this.getLocation(lat, lng).then(
             (locationData) => {  // success callback
@@ -58,7 +69,7 @@ export class Marker {
 
     /* Returns a dict with specific object properties */
     asDict() {
-        const excludedProperties = ["id", "leafletMarker", "map"];
+        const excludedProperties = ["id", "leafletMarker", "location", "map"];
         let data = {};
         for (const propertyName of Object.getOwnPropertyNames(this)) {
             if (!excludedProperties.includes(propertyName)) {
@@ -100,20 +111,17 @@ export class Marker {
     }
 
     showDetails() {
-        console.log(this);
-
         // Generate address and query texts:
         let addressText = "Adresse inconnue";
-        let queryAddressText = "";
-        if (this.location.address || (this.location.postcode && this.location.city)) {
-            addressText = "";
-            if (this.location.address) {
-                addressText += `${this.location.address}`;
-            }
-            if (this.location.postcode && this.location.city) {
-                addressText += `${this.location.address ? ", " : ""}${this.location.postcode}, ${this.location.city}`;
-                queryAddressText = `${_prepareText(this.location.city)}+${this.location.postcode}`;
-            }
+        let cityText = '';
+        const coordinatesText = `(${roundNumber(this.lat)}, ${roundNumber(this.lng)})`;
+        let queryAddressText = '';
+        if (this.location.address) {
+            addressText = `${this.location.address}`;
+        }
+        if (this.location.postcode && this.location.city) {
+            cityText = `${this.location.postcode}, ${this.location.city}`;
+            queryAddressText = `${_prepareText(this.location.city)}+${this.location.postcode}`;
         }
         // Insert legend div in DOM:
         const legendDiv = document.getElementById("map-legend");
@@ -125,17 +133,42 @@ export class Marker {
             legendDiv.prepend(markerLegendDiv);
         }
         markerLegendDiv.innerHTML = `
-            <p>${addressText}</p>
-            <a
-                ${queryAddressText ? `href="https://www.meteociel.fr/prevville.php?action=getville&ville=${queryAddressText}&envoyer=OK"` : ""}
-                target = "_blank"
-                rel=”nofollow”
-            >Météociel <img class="external-link-icon" alt="" src="static/images/external_link.svg"/></a>
+            <div class="details-wrapper">
+                <p class="title-1">${addressText}</p>
+                ${addressText ? `<p class="title-2">${cityText}</p>` : ''}
+                <p class="subtitle">${coordinatesText}</p>
+                <div class=buttons-list>
+                    ${
+                        queryAddressText ?
+                        `<a
+                            class="button"
+                            href="https://www.meteociel.fr/prevville.php?action=getville&ville=${queryAddressText}&envoyer=OK"
+                            target = "_blank"
+                            rel=”nofollow”
+                        ><img class="icon" alt="" src="static/images/sun.svg"/></a>`
+                        : ''
+                    }
+                    <a
+                        id="delete-cursor"
+                        class="button"
+                        href=""
+                    ><img class="icon" alt="" src="static/images/trash_bin.svg"/></a>
+                </div>
+            </div>
         `;
+        // Manage delete operation:
+        const deleteButton = document.getElementById('delete-cursor');
+        const marker = this;
+        deleteButton.addEventListener('click', function(ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            marker.leafletMarker.remove();  // remove from map
+            marker.deleteFromLocalStorage();
+            markerLegendDiv.remove();  // delete details pop-up
+        });
         // Block cusrsor creation through clicks on the details pop-up:
         ['click', 'dblclick'].forEach(function(eventName){
             markerLegendDiv.addEventListener(eventName, function(ev) {
-                ev.preventDefault();
                 ev.stopPropagation();
             });
         });

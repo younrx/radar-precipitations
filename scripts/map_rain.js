@@ -287,8 +287,8 @@ document.addEventListener("DOMContentLoaded", () => {
         ev.originalEvent.preventDefault();
         ev.originalEvent.stopPropagation();
         const marker = new Marker(map, ev.latlng.lat, ev.latlng.lng);
-        marker.saveInLocalStorage();
         marker.displayOnMap();
+        marker.saveInLocalStorage();
     });
     
     // Close maker details pop-up on click:
