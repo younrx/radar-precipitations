@@ -1,5 +1,7 @@
 ///// Map setup /////
 
+import { Marker, loadMarkers } from "./markers.js";
+
 // Display map according to view settings:
 function setMapView(map) {
     // Define view parameters to apply:
@@ -144,93 +146,113 @@ function addRefreshButton(map) {
 }
 
 /*** Marker functions ***/
-function displayMarker(map, coordinates) {
-    // show marker on map:
-    const markerIcon = L.icon({
-        iconUrl: `static/images/pin.svg`,
-        shadowUrl: `static/images/marker-shadow.png`,
-        iconSize: [21.5, 38.25], // size of the icon
-        shadowSize: [40, 40],
-        iconAnchor: [10.75, 38.25], // point of the icon which will correspond to marker's location
-      });
-    L.marker(coordinates, {icon: markerIcon}).addTo(map).on('click', function(ev) {
-        displayMarkerDetails(ev.latlng.lat, ev.latlng.lng);
-    });
-}
-function displayMarkerDetails(lat, lng) {
-    let markers = localStorage.getItem("markers") != null ? JSON.parse(localStorage.getItem("markers")) : [];
-    for(let i=0; i<markers.length; i++) {
-        if(markers[i].lat === lat && markers[i].lng === lng) {
-            console.log(markers[i]);
-            const legendDiv = document.getElementById("map-legend");
-            const markerLegendDivId = "marker-legend-div";
-            if(!document.getElementById(markerLegendDivId)) {
-                let markerLegendDiv = document.createElement("div");
-                markerLegendDiv.id = markerLegendDivId;
-                let markerLegendFullAddress = document.createElement("p");
-                markerLegendFullAddress.textContent = `${markers[i].address}, ${markers[i].postcode}, ${markers[i].city}`;
-                let markerLegendUrl = document.createElement("a");
-                const cityTextForUrl = `${markers[i].city.toLowerCase().replace(' ', '+')}+${markers[i].postcode}`;
-                markerLegendUrl.textContent = "Previsions météo";
-                markerLegendUrl.href = `https://www.meteociel.fr/prevville.php?action=getville&ville=${cityTextForUrl}&envoyer=OK`;
-                markerLegendUrl.target = "_blank";
-                legendDiv.appendChild(markerLegendDiv);
-                markerLegendDiv.appendChild(markerLegendFullAddress);
-                markerLegendDiv.appendChild(markerLegendUrl);
-            }
-        }
-    }
-}
-function addMarker(map, coordinates) {
-    displayMarker(map, coordinates);
-    // store marker in cache:
-    const marker = {'lat': coordinates.lat, 'lng': coordinates.lng};  // TODO: add 'name', 'city', 'weatherUrl'
-    let markers = localStorage.getItem("markers") != null ? JSON.parse(localStorage.getItem("markers")) : [];
-    markers.push(marker);
-    localStorage.setItem("markers", JSON.stringify(markers));
-    // reverse location from coordinates:
-    getLocation(coordinates.lat, coordinates.lng).then(
-        // success callback:
-        (locationData) => {
-            if(locationData) {
-                updateMarker(coordinates.lat, coordinates.lng, locationData);
-            }
-        },
-        // failure callback:
-        () => {
-            console.error(`Failed to reverse location of point ${coordinates.lat}, ${coordinates.lng}`);
-        });
-}
-function updateMarker(lat, lng, data) {
-    let markers = localStorage.getItem("markers") != null ? JSON.parse(localStorage.getItem("markers")) : [];
-    for(let i=0; i<markers.length; i++) {
-        if(markers[i].lat === lat && markers[i].lng === lng) {
-            Object.assign(markers[i], data);  // merge marker and data dicts
-        }
-    }
-    localStorage.setItem("markers", JSON.stringify(markers));
-}
-function deleteMarker() {
-    // TODO
-}
-function loadMarkers(map) {
-    const markers = localStorage.getItem("markers") != null ? JSON.parse(localStorage.getItem("markers")) : [];
-    for(const marker of markers) {
-        displayMarker(map, [marker.lat, marker.lng]);
-    }
-}
-async function getLocation(lat, lng) {
-    const response = await fetch(`https://api-adresse.data.gouv.fr/reverse/?lat=${lat}&lon=${lng}&limit=1`);
-    const rawData = await response.json(); // extract JSON from the http response
-    if(rawData.features?.length) {
-        return {
-            'city': rawData.features[0].properties.city,
-            'postcode': rawData.features[0].properties.postcode,
-            'address': rawData.features[0].properties.name,
-        }
-    }
-    return null;
-}
+// function _prepareText(text) {
+//     return text.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase().replace(' ', '+')
+// }
+// function displayMarker(map, coordinates) {
+//     // show marker on map:
+//     const markerIcon = L.icon({
+//         iconUrl: `static/images/pin.svg`,
+//         shadowUrl: `static/images/marker-shadow.png`,
+//         iconSize: [21.5, 38.25], // size of the icon
+//         shadowSize: [40, 40],
+//         iconAnchor: [10.75, 38.25], // point of the icon which will correspond to marker's location
+//       });
+//     L.marker(coordinates, {icon: markerIcon}).addTo(map).on('click', function(ev) {
+//         displayMarkerDetails(ev.latlng);
+//         // ev.originalEvent.preventDefault();
+//         // ev.originalEvent.stopPropagation();  // -> has no effect
+//     });
+// }
+// function displayMarkerDetails(coordinates) {
+//     let markers = localStorage.getItem("markers") != null ? JSON.parse(localStorage.getItem("markers")) : [];
+//     for(let i=0; i<markers.length; i++) {
+//         if(markers[i].lat === coordinates.lat && markers[i].lng === coordinates.lng) {
+//             const marker = markers[i];
+//             // Generate address and query texts:
+//             let addressText = "Adresse inconnue";
+//             let queryAddressText = "";
+//             if (marker.address || (marker.postcode && marker.city)) {
+//                 addressText = "";
+//                 if (marker.address) {
+//                     addressText += `${marker.address}`;
+//                 }
+//                 if (marker.postcode && marker.city) {
+//                     addressText += `${marker.address ? ", " : ""}${marker.postcode}, ${marker.city}`;
+//                     queryAddressText = `${_prepareText(marker.city)}+${marker.postcode}`;
+//                 }
+//             }
+//             // Insert legend div in DOM:
+//             const legendDiv = document.getElementById("map-legend");
+//             const markerLegendDivId = "marker-legend-div";
+//             let markerLegendDiv = document.getElementById(markerLegendDivId);
+//             if (!markerLegendDiv) {  // i.e. legend div does not exist yet
+//                 markerLegendDiv = document.createElement("div");
+//                 markerLegendDiv.id = markerLegendDivId;
+//                 legendDiv.appendChild(markerLegendDiv);
+//             }
+//             markerLegendDiv.innerHTML = `
+//                 <p>${addressText}</p>
+//                 <a
+//                     ${queryAddressText ? `href="https://www.meteociel.fr/prevville.php?action=getville&ville=${queryAddressText}&envoyer=OK"` : ""}
+//                     target = "_blank"
+//                     rel=”nofollow”
+//                 >Météociel <img class="external-link-icon" alt="" src="static/images/external_link.svg"/></a>
+//             `;
+//         }
+//     }
+// }
+// function addMarker(map, coordinates) {
+//     displayMarker(map, coordinates);
+//     // store marker in cache:
+//     const marker = {'lat': coordinates.lat, 'lng': coordinates.lng};
+//     let markers = localStorage.getItem("markers") != null ? JSON.parse(localStorage.getItem("markers")) : [];
+//     markers.push(marker);
+//     localStorage.setItem("markers", JSON.stringify(markers));
+//     // reverse location from coordinates:
+//     getLocation(coordinates.lat, coordinates.lng).then(
+//         // success callback:
+//         (locationData) => {
+//             if(locationData) {
+//                 updateMarker(coordinates.lat, coordinates.lng, locationData);
+//                 displayMarkerDetails(coordinates);
+//             }
+//         },
+//         // failure callback:
+//         () => {
+//             console.error(`Failed to reverse location of point ${coordinates.lat}, ${coordinates.lng}`);
+//         });
+// }
+// function updateMarker(lat, lng, data) {
+//     let markers = localStorage.getItem("markers") != null ? JSON.parse(localStorage.getItem("markers")) : [];
+//     for(let i=0; i<markers.length; i++) {
+//         if(markers[i].lat === lat && markers[i].lng === lng) {
+//             Object.assign(markers[i], data);  // merge marker and data dicts
+//         }
+//     }
+//     localStorage.setItem("markers", JSON.stringify(markers));
+// }
+// function deleteMarker() {
+//     // TODO
+// }
+// function loadMarkers(map) {
+//     const markers = localStorage.getItem("markers") != null ? JSON.parse(localStorage.getItem("markers")) : [];
+//     for(const marker of markers) {
+//         displayMarker(map, [marker.lat, marker.lng]);
+//     }
+// }
+// async function getLocation(lat, lng) {
+//     const response = await fetch(`https://api-adresse.data.gouv.fr/reverse/?lat=${lat}&lon=${lng}&limit=1`);
+//     const rawData = await response.json(); // extract JSON from the http response
+//     if(rawData.features?.length) {
+//         return {
+//             'city': rawData.features[0].properties.city,
+//             'postcode': rawData.features[0].properties.postcode,
+//             'address': rawData.features[0].properties.name,
+//         }
+//     }
+//     return null;
+// }
 
 
 // Actions to perform when the document is loaded:
@@ -241,6 +263,7 @@ document.addEventListener("DOMContentLoaded", () => {
         zoomControl: false,
         zoomSnap: 0.1,
         attributionControl: false,
+        doubleClickZoom: false,
     });
 
     // update view:
@@ -259,9 +282,20 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Create markers on user click:
-    map.addEventListener('click', async function(ev) {
-        addMarker(map, ev.latlng);
+    // Create markers on double click:
+    map.addEventListener('dblclick', function(ev) {
+        ev.originalEvent.preventDefault();
         ev.originalEvent.stopPropagation();
+        const marker = new Marker(map, ev.latlng.lat, ev.latlng.lng);
+        marker.saveInLocalStorage();
+        marker.displayOnMap();
+    });
+    
+    // Close maker details pop-up on click:
+    map.addEventListener('click', function(ev) {
+        const markerLegendDiv = document.getElementById('marker-legend-div');
+        if (markerLegendDiv) {
+            markerLegendDiv.remove();
+        }
     });
 });
