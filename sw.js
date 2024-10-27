@@ -1,6 +1,6 @@
 // SERVICE WORKER FILE
 
-export const VERSION = "1.4.4"; // Version number to update when a change is made to the app
+const VERSION = "1.4.5"; // Version number to update when a change is made to the app
 const CACHE_NAME = `rainfall-${VERSION}`; // Cache name based on version to ensure a new cache will be created (and the old one will be deleted) on version update
 
 // resources needed when offline:
@@ -80,3 +80,5 @@ self.addEventListener("fetch", (event) => {
         );
     }
 });
+
+export { VERSION };

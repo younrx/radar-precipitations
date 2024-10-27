@@ -74,12 +74,6 @@ div.leaflet-left:has(> #map-legend) {
 #marker-legend-div .buttons-list .button {
     height: 40px;
     width: 40px;
-    border-radius: 10px;
-    border: solid 2px #e8dcfc;
-    background-color: #decef7;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 #marker-legend-div .icon {
     height: 25px;
@@ -148,8 +142,5 @@ div.leaflet-left:has(> #div-refresh-button) {
 
     #marker-legend-div {
         width: 100%;
-        /* margin-bottom: 0;
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0; */
     }
 }

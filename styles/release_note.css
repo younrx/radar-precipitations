@@ -1,0 +1,47 @@
+#release-note {
+    width: 400px;
+    height: auto;
+    background-color: var(--dark-blue-1);
+    top: 100px;
+    border: solid 2px var(--dark-blue-2);
+    border-radius: 10px;
+    font-family: var(--app-font);
+    margin: 0;
+    padding: 30px;
+    box-sizing: border-box;
+}
+#release-note .header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+#release-note .title {
+    font-size: 18px;
+    font-weight: bold;
+}
+#release-note .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 14px;
+}
+#release-note a {
+    color: var(--purple-3);
+    cursor: pointer;
+    text-decoration: none;
+}
+#release-note a#close {
+    width: fit-content;
+    height: auto;
+    padding: 4px 8px;
+    margin-top: 20px;
+    font-weight: 500;
+}
+
+/* For small screens: */
+@media (width <= 640px) {
+    #release-note {
+        width: 90dvw;
+    }
+}
