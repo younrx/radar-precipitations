@@ -1,8 +1,16 @@
 /* MY CUSTOM APP STYLES */
+:root {
+    --app-font: "Segoe UI", Tahoma, sans-serif;
+    --dark-blue-1: #0c376d;
+    --dark-blue-2: #06254c;
+    --purple-1: #c7b4eb;
+    --purple-2: #7551b5;
+    --purple-3: #4f3183;
+}
 body {
-    background-color: #0c376d;
+    background-color: var(--dark-blue-1);
     color: white;
-    font-family: "Segoe UI", Tahoma, sans-serif;
+    font-family: var(--app-font);
 }
 #main {
     display: flex;
