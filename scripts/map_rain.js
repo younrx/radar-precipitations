@@ -173,51 +173,51 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Create markers on long press:
-    // const mapDiv = document.getElementById('map');
-    // mapDiv.addEventListener('long-press', function(ev) {
-    //     ev.preventDefault();
-    //     ev.stopPropagation();
-    //     const x = ev.detail.pageX;
-    //     const y = ev.detail.pageY;
-    //     const point = L.point(x, y);
-    //     // console.log(`Clicked (x, y): (${x},${y})`);
-    //     const latlng = map.layerPointToLatLng(point);
-    //     // console.log(latlng);
-    //     const marker = new Marker(map, latlng.lat, latlng.lng);
-    //     marker.displayOnMap();
-    //     marker.saveInLocalStorage();
-    //     marker.showDetails();
-    // });
+    const mapDiv = document.getElementById('map');
+    mapDiv.addEventListener('long-press', function(ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        const x = ev.detail.pageX;
+        const y = ev.detail.pageY;
+        const point = L.point(x, y);
+        // console.log(`Clicked (x, y): (${x},${y})`);
+        const latlng = map.layerPointToLatLng(point);
+        // console.log(latlng);
+        const marker = new Marker(map, latlng.lat, latlng.lng);
+        marker.displayOnMap();
+        marker.saveInLocalStorage();
+        marker.showDetails();
+    });
 
-    let pressTimer = null;
-    map.addEventListener('mousedown', function(ev) {
-        let mouseHasMoved = false;
+    // let pressTimer = null;
+    // map.addEventListener('mousedown', function(ev) {
+    //     let mouseHasMoved = false;
 
-        function detectMoves() {
-            mouseHasMoved = true;
-            // see https://github.com/Leaflet/Leaflet/pull/8435/files for 'expect(latlng).to.be.nearLatLng([..., ...])' instead
-        }
+    //     function detectMoves() {
+    //         mouseHasMoved = true;
+    //         // see https://github.com/Leaflet/Leaflet/pull/8435/files for 'expect(latlng).to.be.nearLatLng([..., ...])' instead
+    //     }
 
-        map.addEventListener('mousemove', detectMoves);
+    //     map.addEventListener('mousemove', detectMoves);
         
-        pressTimer = window.setTimeout(function() {
-            if (!mouseHasMoved) {
-                ev.originalEvent.preventDefault();
-                ev.originalEvent.stopPropagation();
-                map.removeEventListener('mousemove', detectMoves);
-                console.log('Long Click !');
-                const marker = new Marker(map, ev.latlng.lat, ev.latlng.lng);
-                marker.displayOnMap();
-                marker.saveInLocalStorage();
-                marker.showDetails();
-            }
-        }, 500);
-        return false; 
-    })
-    map.addEventListener('mouseup', function(ev) {
-        clearTimeout(pressTimer);
-        return false;
-    })
+    //     pressTimer = window.setTimeout(function() {
+    //         if (!mouseHasMoved) {
+    //             ev.originalEvent.preventDefault();
+    //             ev.originalEvent.stopPropagation();
+    //             map.removeEventListener('mousemove', detectMoves);
+    //             console.log('Long Click !');
+    //             const marker = new Marker(map, ev.latlng.lat, ev.latlng.lng);
+    //             marker.displayOnMap();
+    //             marker.saveInLocalStorage();
+    //             marker.showDetails();
+    //         }
+    //     }, 500);
+    //     return false; 
+    // })
+    // map.addEventListener('mouseup', function(ev) {
+    //     clearTimeout(pressTimer);
+    //     return false;
+    // })
 
     map.addEventListener('dblclick', function(ev) {
         ev.originalEvent.preventDefault();
@@ -229,7 +229,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     
     // Close maker details pop-up on click:
-    map.addEventListener('mousedown', function(ev) {
+    map.addEventListener('click', function(ev) {
         const markerLegendDiv = document.getElementById('marker-legend-div');
         if (markerLegendDiv) {
             markerLegendDiv.remove();
