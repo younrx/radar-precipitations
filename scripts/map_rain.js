@@ -1,5 +1,7 @@
 ///// Map setup /////
 
+import { Marker, loadMarkers } from "./markers.js";
+
 // Display map according to view settings:
 function setMapView(map) {
     // Define view parameters to apply:
@@ -139,9 +141,9 @@ function addRefreshButton(map) {
     document.getElementById("div-refresh-button").addEventListener("click", function (ev) {
         // triggered on map move/zoom
         window.location.reload(true); // force refresh
+        ev.stopPropagation();
     });
 }
-
 
 // Actions to perform when the document is loaded:
 document.addEventListener("DOMContentLoaded", () => {
@@ -151,10 +153,12 @@ document.addEventListener("DOMContentLoaded", () => {
         zoomControl: false,
         zoomSnap: 0.1,
         attributionControl: false,
+        doubleClickZoom: false,
     });
 
     // update view:
     setMapView(map);
+    loadMarkers(map);
 
     // display rain:
     const rainGifImageSource = "https://www.meteo60.fr/radars/animation-radars-france.gif";
@@ -166,5 +170,23 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!document.hidden){ // i.e. if the page displayed is the current app
             window.location.reload(true); // force refresh
         }
-     });
+    });
+
+    // Create markers on double click:
+    map.addEventListener('dblclick', function(ev) {
+        ev.originalEvent.preventDefault();
+        ev.originalEvent.stopPropagation();
+        const marker = new Marker(map, ev.latlng.lat, ev.latlng.lng);
+        marker.displayOnMap();
+        marker.saveInLocalStorage();
+        marker.showDetails();
+    });
+    
+    // Close maker details pop-up on click:
+    map.addEventListener('click', function(ev) {
+        const markerLegendDiv = document.getElementById('marker-legend-div');
+        if (markerLegendDiv) {
+            markerLegendDiv.remove();
+        }
+    });
 });

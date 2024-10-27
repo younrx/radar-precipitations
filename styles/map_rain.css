@@ -14,6 +14,11 @@ div.leaflet-left:has(> #map-legend) {
     align-items: center;
     width: 400px;
     margin-left: 0;
+    margin-bottom: 10px;
+}
+#map-legend a {
+    color: white;
+    text-decoration: none;
 }
 #rain-legend {
     width: 100%;
@@ -28,6 +33,59 @@ div.leaflet-left:has(> #map-legend) {
     width: 218.888888%; /* value extracted from gif image size. It asumes the gif image size never change */
     transform: translate(-27.106598%, -97.272727%); /* value extracted from gif image size. It asumes the gif image size never change */
     z-index: -1;
+}
+#marker-legend-div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: var(--dark-blue-1);
+    border: solid 2px var(--dark-blue-2);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 10px;
+    font-family: var(--app-font);
+}
+#marker-legend-div .details-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#marker-legend-div .title-1,
+#marker-legend-div .title-2 {
+    font-size: 14px;
+}
+#marker-legend-div .title-1 {
+    font-weight: bold;
+}
+#marker-legend-div .subtitle {
+    font-size: 11px;
+    font-style: italic;
+}
+#marker-legend-div .buttons-list {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+}
+#marker-legend-div .buttons-list .button:not(:last-child) {
+    margin-right: 20px;
+}
+#marker-legend-div .buttons-list .button {
+    height: 40px;
+    width: 40px;
+    border-radius: 10px;
+    border: solid 2px #e8dcfc;
+    background-color: #decef7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#marker-legend-div .icon {
+    height: 25px;
+    color: var(--purple-2);
+    /* make svg purple: */
+    filter: invert(21%) sepia(64%) saturate(1013%) hue-rotate(229deg) brightness(93%) contrast(98%);
 }
 #rain-gif-wrapper {
     aspect-ratio: 985/850;
@@ -71,6 +129,7 @@ div.leaflet-left:has(> #div-refresh-button) {
 @media (width <= 640px) {
     #map-legend {
         width: 90dvw;
+        margin-bottom: 0;
     }
     /* Hide rain blue pixels when time bar is not perfectly resized - Start */
     #time-legend {
@@ -83,7 +142,14 @@ div.leaflet-left:has(> #div-refresh-button) {
         position: absolute;
         width: 100%;
         height: 100%;
-        box-shadow: 0 0 0 1px #fff inset;
+        box-shadow: 0 0 0 1px white inset;
     }
     /* Hide rain blue pixels when time bar is not perfectly resized - End */
+
+    #marker-legend-div {
+        width: 100%;
+        /* margin-bottom: 0;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0; */
+    }
 }
