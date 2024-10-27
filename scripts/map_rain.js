@@ -172,13 +172,6 @@ document.addEventListener("DOMContentLoaded", () => {
     displayRain(map, rainGifImageSource);
     addRefreshButton(map);
 
-    // Refresh page to update rain data every time the user opens the tab page:
-    document.addEventListener("visibilitychange", function() {
-        if (!document.hidden){ // i.e. if the page displayed is the current app
-            window.location.reload(true); // force refresh
-        }
-    });
-
     map.addEventListener('dblclick', function(ev) {
         ev.originalEvent.preventDefault();
         ev.originalEvent.stopPropagation();
