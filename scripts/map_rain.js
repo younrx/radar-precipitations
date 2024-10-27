@@ -1,6 +1,7 @@
 ///// Map setup /////
 
 import { Marker, loadMarkers } from "./markers.js";
+import { VERSION } from "../sw.js";
 
 // Display map according to view settings:
 function setMapView(map) {
@@ -91,6 +92,12 @@ function displayRain(map, rainGifImageSource) {
     timeLegendImg.src = rainGifImageSource;
     let timeLegendBoder = document.createElement("div"); // border to hide rain blue pixels when resizing is not exactly perfect (on small screens)
     timeLegendBoder.id = "time-legend-border";
+
+    // For debug:
+    let versionLegend = document.createElement("div");
+    versionLegend.innerHTML = `<p style="color: #000;">v${VERSION}</p>`;
+    document.getElementById("map-legend").appendChild(versionLegend);
+
     document.getElementById("map-legend").appendChild(timeLegend);
     document.getElementById("time-legend").appendChild(timeLegendBoder);
     document.getElementById("time-legend").appendChild(timeLegendImg);
