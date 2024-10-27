@@ -152,6 +152,19 @@ function addRefreshButton(map) {
     });
 }
 
+function insertReleaseNote(map) {
+    L.Control.ReleaseNote = L.Control.extend({
+        onAdd: function (map) {
+            let div = L.DomUtil.create("div");
+            div.id = "release-note";
+            div.className += "hidden";
+            return div;
+        },
+    });
+    const popUp = new L.Control.ReleaseNote({ position: 'topleft' });
+    popUp.addTo(map);
+}
+
 // Actions to perform when the document is loaded:
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -171,6 +184,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const rainGifImageSource = "https://www.meteo60.fr/radars/animation-radars-france.gif";
     displayRain(map, rainGifImageSource);
     addRefreshButton(map);
+
+    // Insert release note Control:
+    insertReleaseNote(map);
 
     map.addEventListener('dblclick', function(ev) {
         ev.originalEvent.preventDefault();

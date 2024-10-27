@@ -3,6 +3,8 @@
     --app-font: "Segoe UI", Tahoma, sans-serif;
     --dark-blue-1: #0c376d;
     --dark-blue-2: #06254c;
+    --light-purple-1: #e8dcfc;
+    --light-purple-2: #decef7;
     --purple-1: #c7b4eb;
     --purple-2: #7551b5;
     --purple-3: #4f3183;
@@ -15,6 +17,18 @@ body {
 #main {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.hidden {
+    display: none;
+}
+.button {
+    border-radius: 10px;
+    border: solid 2px var(--light-purple-1);
+    background-color: var(--light-purple-2);
+    color: var(--purple-3);
+    display: flex;
     justify-content: center;
     align-items: center;
 }
