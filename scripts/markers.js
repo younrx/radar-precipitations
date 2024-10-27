@@ -161,6 +161,8 @@ export class Marker {
                 </div>
             </div>
         `;
+        this.map.setView({ lat: this.lat, lng: this.lng });
+
         // Manage delete operation:
         const deleteButton = document.getElementById('delete-cursor');
         const marker = this;
