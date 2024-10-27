@@ -289,6 +289,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const marker = new Marker(map, ev.latlng.lat, ev.latlng.lng);
         marker.displayOnMap();
         marker.saveInLocalStorage();
+        marker.showDetails();
     });
     
     // Close maker details pop-up on click:

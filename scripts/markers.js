@@ -102,6 +102,11 @@ export class Marker {
 
     updateLocation(data) {
         this.location = data;
+        let markerLegendDiv = document.getElementById('marker-legend-div');
+        if (markerLegendDiv) {
+            // Display newly computed details:
+            this.showDetails();
+        }
     }
 
     displayOnMap() {
