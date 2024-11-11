@@ -41,7 +41,11 @@
         </div>
 
         <!-- Scripts: -->
-        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+        <!-- Temp solution for touch events: use a custom build version of leaflet -->
+        <!-- <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script> -->
+        <script type="module" src="scripts/leaflet.js"></script>
+
         <script type="module" src="scripts/map_rain.js"></script>
         <script type="module" src="scripts/release_note.js"></script>
         <script>
