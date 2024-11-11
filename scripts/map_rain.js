@@ -198,10 +198,44 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     
     // Close maker details pop-up on click:
-    map.addEventListener('click', function(ev) {
+    map.addEventListener('mousedown', function(ev) {
         const markerLegendDiv = document.getElementById('marker-legend-div');
         if (markerLegendDiv) {
             markerLegendDiv.remove();
         }
     });
+
+    // Block default context menu event:
+    map.addEventListener('contextmenu', function(ev) {
+        ev.originalEvent.preventDefault();
+        ev.originalEvent.stopPropagation();
+    });
+
+    // Manage marker creation on long-press on touch devices:
+    let pressTimer = null;
+    map.addEventListener('touchstart', function(ev) {
+        let mouseHasMoved = false;
+
+        function detectMoves() {
+            mouseHasMoved = true;
+            // see https://github.com/Leaflet/Leaflet/pull/8435/files for 'expect(latlng).to.be.nearLatLng([..., ...])' instead
+        }
+
+        map.addEventListener('touchmove', detectMoves);
+
+        pressTimer = window.setTimeout(function() {
+            if (!mouseHasMoved) {
+                ev.originalEvent.preventDefault();
+                ev.originalEvent.stopPropagation();
+                map.removeEventListener('touchmove', detectMoves);
+                const marker = new Marker(map, ev.latlng.lat, ev.latlng.lng);
+                marker.displayOnMap();
+                marker.saveInLocalStorage();
+                marker.showDetails();
+            }
+        }, 500);
+    })
+    map.addEventListener('touchend', function(ev) {
+        clearTimeout(pressTimer);
+    })
 });

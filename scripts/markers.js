@@ -174,7 +174,7 @@ export class Marker {
             markerLegendDiv.remove();  // delete details pop-up
         });
         // Block cusrsor creation through clicks on the details pop-up:
-        ['click', 'dblclick'].forEach(function(eventName){
+        ['click', 'dblclick', 'mousedown', 'touchstart'].forEach(function(eventName){
             markerLegendDiv.addEventListener(eventName, function(ev) {
                 ev.stopPropagation();
             });
