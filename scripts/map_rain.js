@@ -205,12 +205,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Block default context menu event:
-    map.addEventListener('contextmenu', function(ev) {
-        ev.originalEvent.preventDefault();
-        ev.originalEvent.stopPropagation();
-    });
-
     // Manage marker creation on long-press on touch devices:
     let pressTimer = null;
     map.addEventListener('touchstart', function(ev) {
