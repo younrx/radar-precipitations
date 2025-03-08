@@ -1,6 +1,7 @@
 // Script specific to get/use current user location
 
 import { removeElementsByClass } from "./utils.js";
+import { closeDrawer } from "./drawer.js";
 
 
 const POSITION_ICON = L.icon({
@@ -44,11 +45,13 @@ export function activateLocation(map) {
             navigator.geolocation.getCurrentPosition(
                 // success callback:
                 (position) => {
-                    displayCurrentLocation(map, position.coords.latitude, position.coords.longitude, position.coords.accuracy)
+                    displayCurrentLocation(map, position.coords.latitude, position.coords.longitude, position.coords.accuracy);
+                    closeDrawer();
                 },
                 // failure callback:
                 (err) => {
                     console.warn(`ERROR(${err.code}): ${err.message}`);
+                    closeDrawer();
                 },
                 // options:
                 {

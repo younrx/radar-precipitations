@@ -27,17 +27,11 @@ div.leaflet-left:has(> #map-legend) {
     display: flex;
     align-items: center;
     height: fit-content;
+    box-sizing: border-box;
     width: 100%;
     padding: 5px;
     background-color: white;
     border-radius: 5px;
-}
-a#locate {
-    margin-left: 5px;
-}
-a#locate img {
-    height: 20px;
-    width: 20px;
 }
 #map-legend-data-group {
     display: flex;
@@ -61,7 +55,7 @@ a#locate img {
     transform: translate(-35%, -97.272727%); /* value extracted from gif image size. It asumes the gif image size never change */
     z-index: -1;
 }
-#marker-legend-div {
+#marker-legend-div, #drawer {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -92,11 +86,6 @@ a#locate img {
 }
 #marker-legend-div .buttons-list {
     margin-top: 20px;
-    display: flex;
-    align-items: center;
-}
-#marker-legend-div .buttons-list .button:not(:last-child) {
-    margin-right: 20px;
 }
 #rain-gif-wrapper {
     aspect-ratio: 985/850;
@@ -108,31 +97,13 @@ a#locate img {
 #rain-gif-ref {
     visibility: hidden;
 }
-#refresh-button {
-    padding: 10px;
-    border-radius: 50%;
-    border: none;
-    box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.5);
+
+/* Drawer -- Start */
+#drawer.hidden {
+    display: none;
 }
-#refresh-button:hover {
-    cursor: pointer;
-}
-div.leaflet-left:has(> #div-refresh-button) {
-    padding: 0;
-    margin: 0;
-    left: 50%;
-    transform: translate(-50%, 0%);
-}
-#div-refresh-button.refresh-button-hidden {
-    top: -80px;
-    transition-property: top;
-    transition-duration: 300ms;
-}
-#div-refresh-button.refresh-button-visible {
-    top: 20px;
-    transition-property: top;
-    transition-duration: 300ms;
-}
+/* Drawer -- Stop */
+
 /* For small screens: */
 @media (width <= 640px) {
     #map-legend {

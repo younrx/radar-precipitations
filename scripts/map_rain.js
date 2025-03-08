@@ -2,6 +2,8 @@
 
 import { Marker, loadMarkers } from "./markers.js";
 import { activateLocation } from "./location.js";
+import { blockMarkerCreation } from "./utils.js";
+import { activateDrawerListener } from "./drawer.js";
 import { VERSION } from "../sw.js";
 
 // Display map according to view settings:
@@ -97,25 +99,29 @@ function displayRain(map, rainGifImageSource) {
     let timeLegendBoder = document.createElement("div"); // border to hide rain blue pixels when resizing is not exactly perfect (on small screens)
     timeLegendBoder.id = "time-legend-border";
 
-    // App version for debug:
-    let versionLegend = document.createElement("div");
-    versionLegend.innerHTML = `<p class="version-number">v${VERSION}</p>`;
+    
+    let drawerDiv = document.querySelector("div#drawer");
+    document.getElementById("map-legend").appendChild(drawerDiv);
     
     document.getElementById("map-legend").appendChild(mapLegendMainGroup);
-    document.getElementById("map-legend").appendChild(versionLegend);
     document.getElementById("map-legend-main-group").appendChild(mapLegendDataGroup);
-
     document.getElementById("map-legend-data-group").appendChild(timeLegend);
     document.getElementById("time-legend").appendChild(timeLegendBoder);
     document.getElementById("time-legend").appendChild(timeLegendImg);
     document.getElementById("map-legend-data-group").appendChild(document.getElementById("rain-legend"));
 
-    let locateButton = document.createElement("a");
-    locateButton.id = "locate";
-    locateButton.classList.add("button-dark");
-    locateButton.innerHTML = `<img class="icon-dark" alt="" src="static/images/aim.svg"/>`;
-    document.getElementById("map-legend-main-group").appendChild(locateButton);
-
+    let drawerButton = document.createElement("a");
+    drawerButton.id = "drawer-button";
+    drawerButton.classList.add("button", "dark", "small");
+    drawerButton.innerHTML = `<img class="icon" alt="" src="static/images/arrow_up.svg"/>`;
+    document.getElementById("map-legend-main-group").appendChild(drawerButton);
+    
+    // App version:
+    let versionLegend = document.createElement("div");
+    versionLegend.innerHTML = `<p class="version-number">v${VERSION}</p>`;
+    document.getElementById("map-legend").appendChild(versionLegend);
+    blockMarkerCreation(document.getElementById("map-legend"));
+    
     // ***** Map legend - End ***** //
 
     // Dynamically update styles of my custom overlay, when styles of the reference overlay are changed:
@@ -130,41 +136,6 @@ function displayRain(map, rainGifImageSource) {
         attributes: true,
         attributeFilter: ["style"],
     }); // link the observer to the reference overlay
-}
-
-function addRefreshButton(map) {
-    L.Control.LegendWrapper = L.Control.extend({
-        onAdd: function (map) {
-            let divBut = L.DomUtil.create("div");
-            divBut.id = "div-refresh-button";
-            divBut.className += "refresh-button-hidden";
-            return divBut;
-        },
-    });
-    const divBut = new L.Control.LegendWrapper({ position: "topleft" });
-    divBut.addTo(map);
-    const refreshBut = document.querySelector("#refresh-button");
-    refreshBut.classList.add("button-dark");
-    document.getElementById("div-refresh-button").appendChild(refreshBut);
-
-    // Make button appear on map move:
-    map.addEventListener("movestart", function (ev) {
-        // triggered on map move/zoom
-        document.getElementById("div-refresh-button").className = "leaflet-control refresh-button-visible";
-    });
-    // Make button disappear after map move:
-    map.addEventListener("moveend", function (ev) {
-        // triggered on map move/zoom
-        setTimeout(() => {
-            document.getElementById("div-refresh-button").className = "leaflet-control refresh-button-hidden";
-        }, 2000);
-    });
-    // Perform action on button click:
-    document.getElementById("div-refresh-button").addEventListener("click", function (ev) {
-        // triggered on map move/zoom
-        window.location.reload(true); // force refresh
-        ev.stopPropagation();
-    });
 }
 
 function insertReleaseNote(map) {
@@ -205,13 +176,21 @@ document.addEventListener("DOMContentLoaded", () => {
     // display rain:
     const rainGifImageSource = "https://www.meteo60.fr/radars/animation-radars-france.gif";
     displayRain(map, rainGifImageSource);
-    addRefreshButton(map);
 
     // Insert release note Control:
     insertReleaseNote(map);
 
+    // Activate drawer listener:
+    activateDrawerListener(map);
+
     // Activate user location features:
     activateLocation(map);
+
+    // Activate refresh button:
+    document.getElementById("refresh-button").addEventListener("click", function (ev) {
+        window.location.reload(true); // force refresh
+        ev.stopPropagation();
+    });
 
     // ***** Markers management - Start ***** //
 
