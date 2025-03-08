@@ -1,6 +1,6 @@
 // Specific script for drawer management
 
-export function activateDrawerListener(map) {
+export function activateDrawerListener() {
     document.querySelector('a#drawer-button').addEventListener('click', function(ev) {
         ev.preventDefault();
         ev.stopPropagation();

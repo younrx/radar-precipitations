@@ -104,6 +104,30 @@ div.leaflet-left:has(> #map-legend) {
 }
 /* Drawer -- Stop */
 
+/* Message -- Start */
+#message.hidden {
+    display: none;
+}
+#message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: var(--dark-blue-1);
+    border: solid 2px var(--dark-blue-2);
+    border-radius: 10px;
+    padding: 5px;
+    margin-bottom: 5px;
+    font-family: var(--app-font);
+}
+#message.error {
+    background-color: var(--red-1);
+    border-color: var(--red-2);
+    color: var(--red-2);
+}
+/* Drawer -- Stop */
+
 /* For small screens: */
 @media (width <= 640px) {
     #map-legend {

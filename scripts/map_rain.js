@@ -102,6 +102,8 @@ function displayRain(map, rainGifImageSource) {
     
     let drawerDiv = document.querySelector("div#drawer");
     document.getElementById("map-legend").appendChild(drawerDiv);
+    let messageDiv = document.querySelector("div#message");
+    document.getElementById("map-legend").appendChild(messageDiv);
     
     document.getElementById("map-legend").appendChild(mapLegendMainGroup);
     document.getElementById("map-legend-main-group").appendChild(mapLegendDataGroup);
@@ -181,7 +183,7 @@ document.addEventListener("DOMContentLoaded", () => {
     insertReleaseNote(map);
 
     // Activate drawer listener:
-    activateDrawerListener(map);
+    activateDrawerListener();
 
     // Activate user location features:
     activateLocation(map);

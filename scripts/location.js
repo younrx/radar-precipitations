@@ -2,6 +2,7 @@
 
 import { removeElementsByClass } from "./utils.js";
 import { closeDrawer } from "./drawer.js";
+import { messageError } from "./message.js";
 
 
 const POSITION_ICON = L.icon({
@@ -51,17 +52,19 @@ export function activateLocation(map) {
                 // failure callback:
                 (err) => {
                     console.warn(`ERROR(${err.code}): ${err.message}`);
+                    messageError(`Erreur de géolocalisation : ${err.message}`);
                     closeDrawer();
                 },
                 // options:
                 {
-                    // enableHighAccuracy: true,
+                    enableHighAccuracy: true,
                     timeout: 5000,
                     maximumAge: 0,  // never use cached position
                 }
             );
         } else {
             /* geolocation IS NOT available */
+            messageError("Pas de géolocalisation disponible");
         }
     });
 };

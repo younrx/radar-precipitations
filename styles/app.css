@@ -10,6 +10,8 @@
     --purple-1: #c7b4eb;
     --purple-2: #7551b5;
     --purple-3: #4f3183;
+    --red-1: #ffa0a0;
+    --red-2: #a11212;
 }
 body {
     background-color: var(--dark-blue-1);
