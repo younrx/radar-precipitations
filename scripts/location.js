@@ -36,32 +36,53 @@ function displayCurrentLocation(map, lat, lng, accuracy) {
     ).addTo(map);
 }
 
+function startSpinAnimation() {
+    let locateButtonImage = document.querySelector('a#locate img');
+    locateButtonImage.classList.add("spin");
+    locateButtonImage.src = "static/images/spin.svg"
+}
+
+function stopSpinAnimation() {
+    let locateButtonImage = document.querySelector('a#locate img');
+    locateButtonImage.classList.remove("spin");
+    locateButtonImage.src = "static/images/aim.svg"
+}
+
 export function activateLocation(map) {
     // Center view on user location:
+    let isLocationInProgress = false;
     document.querySelector('a#locate').addEventListener('click', function(ev) {
         ev.preventDefault();
         ev.stopPropagation();
         if ("geolocation" in navigator) {
             /* geolocation is available */
-            navigator.geolocation.getCurrentPosition(
-                // success callback:
-                (position) => {
-                    displayCurrentLocation(map, position.coords.latitude, position.coords.longitude, position.coords.accuracy);
-                    closeDrawer();
-                },
-                // failure callback:
-                (err) => {
-                    console.warn(`ERROR(${err.code}): ${err.message}`);
-                    messageError(`Erreur de géolocalisation : ${err.message}`);
-                    closeDrawer();
-                },
-                // options:
-                {
-                    enableHighAccuracy: true,
-                    timeout: 5000,
-                    maximumAge: 0,  // never use cached position
-                }
-            );
+            startSpinAnimation();
+            if (!isLocationInProgress) {  // prevent multiple calls if user clicks multiple times
+                isLocationInProgress = true;
+                navigator.geolocation.getCurrentPosition(
+                    // success callback:
+                    (position) => {
+                        displayCurrentLocation(map, position.coords.latitude, position.coords.longitude, position.coords.accuracy);
+                        stopSpinAnimation();
+                        closeDrawer();
+                        isLocationInProgress = false;
+                    },
+                    // failure callback:
+                    (err) => {
+                        console.warn(`ERROR(${err.code}): ${err.message}`);
+                        messageError(`Erreur de géolocalisation : ${err.message}`);
+                        stopSpinAnimation();
+                        closeDrawer();
+                        isLocationInProgress = false;
+                    },
+                    // options:
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 5000,
+                        maximumAge: 0,  // never use cached position
+                    }
+                );
+            }
         } else {
             /* geolocation IS NOT available */
             messageError("Pas de géolocalisation disponible");
