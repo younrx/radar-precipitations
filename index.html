@@ -34,11 +34,19 @@
         <!-- Application main body: -->
         <div id="main">
             <div id="map"></div>
-            <button id="refresh-button" type="submit">
-                <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M21 3V8M21 8H16M21 8L18 5.29168C16.4077 3.86656 14.3051 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.2832 21 19.8675 18.008 20.777 14" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </button>
+            <div id="drawer" class="hidden">
+                <div class="buttons-list">
+                    <div class="flex-center">
+                        <a id="refresh-button" class="button" href=""><img class="icon" alt="" src="static/images/refresh.svg"/></a>
+                        <p>Acualiser</p>
+                    </div>
+                    <div class="flex-center">
+                        <a id="locate" class="button" href=""><img class="icon" alt="" src="static/images/aim.svg"/></a>
+                        <p>Localiser</p>
+                    </div>
+                </div>
+            </div>
+            <div id="message" class="hidden"></div>
         </div>
 
         <!-- Scripts: -->

@@ -1,13 +1,17 @@
 /* MY CUSTOM APP STYLES */
 :root {
     --app-font: "Segoe UI", Tahoma, sans-serif;
+    /* --blue-white: #f6f9fc; */
     --dark-blue-1: #0c376d;
     --dark-blue-2: #06254c;
+    --light-blue-1: #c0d4ec;
     --light-purple-1: #e8dcfc;
     --light-purple-2: #decef7;
     --purple-1: #c7b4eb;
     --purple-2: #7551b5;
     --purple-3: #4f3183;
+    --red-1: #ffa0a0;
+    --red-2: #a11212;
 }
 body {
     background-color: var(--dark-blue-1);
@@ -23,12 +27,62 @@ body {
 .hidden {
     display: none;
 }
+.flex-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+img.spin {
+    -webkit-animation:spin 1.5s linear infinite;
+    -moz-animation:spin 1.5s linear infinite;
+    animation:spin 1.5s linear infinite;
+}
+@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+
+/* Buttons -- Start */
 .button {
+    height: 40px;
+    width: 40px;
+    min-height: 40px;
+    min-width: 40px;
+    cursor: pointer;
     border-radius: 10px;
-    border: solid 2px var(--light-purple-1);
-    background-color: var(--light-purple-2);
-    color: var(--purple-3);
     display: flex;
     justify-content: center;
     align-items: center;
+    border: solid 2px var(--light-purple-1);
+    background-color: var(--light-purple-2);
+    color: var(--purple-3);
 }
+.button.small {
+    height: 35px;
+    width: 35px;
+    min-height: 35px;
+    min-width: 35px;
+    margin: 5px;
+}
+.button.dark {
+    border: solid 2px var(--dark-blue-1);
+    background-color: var(--dark-blue-1);
+    color: white;
+}
+.icon {
+    height: 25px;
+    color: var(--purple-2);
+    filter: invert(21%) sepia(64%) saturate(1013%) hue-rotate(229deg) brightness(93%) contrast(98%);
+}
+.button.dark .icon {
+    height: 25px;
+    color: white;
+    filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(273deg) brightness(105%) contrast(101%);
+}
+.buttons-list {
+    display: flex;
+    align-items: center;
+}
+.buttons-list > :not(:last-child) {
+    margin-right: 20px;
+}
+/* Buttons -- Stop */

@@ -16,25 +16,46 @@ div.leaflet-left:has(> #map-legend) {
     margin-left: 0;
     margin-bottom: 10px;
 }
+#map-legend .version-number {
+    color: black;
+}
 #map-legend a {
     color: white;
     text-decoration: none;
 }
+#map-legend-main-group {
+    display: flex;
+    align-items: center;
+    height: fit-content;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 5px;
+    background-color: white;
+    border-radius: 5px;
+}
+#map-legend-data-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
 #rain-legend {
     width: 100%;
     margin-left: 0;
+    margin-bottom: 0;
 }
 #time-legend {
     width: 100%;
-    aspect-ratio: 450/24; /* value extracted from gif image size. It asumes the gif image size never change */
+    z-index: 10;
+    aspect-ratio: 15.9375; /* value extracted from gif image size. It asumes the gif image size never change */
     overflow: hidden;
 }
 #time-legend img {
-    width: 218.888888%; /* value extracted from gif image size. It asumes the gif image size never change */
-    transform: translate(-27.106598%, -97.272727%); /* value extracted from gif image size. It asumes the gif image size never change */
+    width: 259%;
+    transform: translate(-35%, -97.272727%); /* value extracted from gif image size. It asumes the gif image size never change */
     z-index: -1;
 }
-#marker-legend-div {
+#marker-legend-div, #drawer {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -65,21 +86,6 @@ div.leaflet-left:has(> #map-legend) {
 }
 #marker-legend-div .buttons-list {
     margin-top: 20px;
-    display: flex;
-    align-items: center;
-}
-#marker-legend-div .buttons-list .button:not(:last-child) {
-    margin-right: 20px;
-}
-#marker-legend-div .buttons-list .button {
-    height: 40px;
-    width: 40px;
-}
-#marker-legend-div .icon {
-    height: 25px;
-    color: var(--purple-2);
-    /* make svg purple: */
-    filter: invert(21%) sepia(64%) saturate(1013%) hue-rotate(229deg) brightness(93%) contrast(98%);
 }
 #rain-gif-wrapper {
     aspect-ratio: 985/850;
@@ -91,39 +97,41 @@ div.leaflet-left:has(> #map-legend) {
 #rain-gif-ref {
     visibility: hidden;
 }
-#refresh-button {
-    width: 40px;
-    height: 40px;
-    padding: 10px;
-    background-color: #0c376d;
-    border-radius: 50%;
-    border: none;
-    box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.5);
+
+/* Drawer -- Start */
+#drawer.hidden {
+    display: none;
 }
-#refresh-button:hover {
-    cursor: pointer;
+/* Drawer -- Stop */
+
+/* Message -- Start */
+#message.hidden {
+    display: none;
 }
-div.leaflet-left:has(> #div-refresh-button) {
-    padding: 0;
-    margin: 0;
-    left: 50%;
-    transform: translate(-50%, 0%);
+#message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: var(--dark-blue-1);
+    border: solid 2px var(--dark-blue-2);
+    border-radius: 10px;
+    padding: 5px;
+    margin-bottom: 5px;
+    font-family: var(--app-font);
 }
-#div-refresh-button.refresh-button-hidden {
-    top: -80px;
-    transition-property: top;
-    transition-duration: 300ms;
+#message.error {
+    background-color: var(--red-1);
+    border-color: var(--red-2);
+    color: var(--red-2);
 }
-#div-refresh-button.refresh-button-visible {
-    top: 20px;
-    transition-property: top;
-    transition-duration: 300ms;
-}
+/* Drawer -- Stop */
+
 /* For small screens: */
 @media (width <= 640px) {
     #map-legend {
         width: 90dvw;
-        margin-bottom: 0;
     }
     /* Hide rain blue pixels when time bar is not perfectly resized - Start */
     #time-legend {

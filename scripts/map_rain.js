@@ -1,6 +1,9 @@
 ///// Map setup /////
 
 import { Marker, loadMarkers } from "./markers.js";
+import { activateLocation } from "./location.js";
+import { blockMarkerCreation } from "./utils.js";
+import { activateDrawerListener } from "./drawer.js";
 import { VERSION } from "../sw.js";
 
 // Display map according to view settings:
@@ -16,8 +19,7 @@ function setMapView(map) {
     const viewCoordinatesLng = localStorage.getItem("viewCoordinatesLng") != null ? localStorage.getItem("viewCoordinatesLng") : viewCoordinatesDefault.lng;
     const viewZoom = localStorage.getItem("viewZoom") != null ? localStorage.getItem("viewZoom") : viewDefaultZoom;
     // apply view parameters:
-    map.setView({ lat: viewCoordinatesLat, lng: viewCoordinatesLng });
-    map.setZoom(viewZoom);
+    map.setView({ lat: viewCoordinatesLat, lng: viewCoordinatesLng }, viewZoom);
 
     // Store view parameters in local cache so that the view shown after loading page is based on user preferences:
     map.addEventListener("moveend", function (ev) {
@@ -86,6 +88,10 @@ function displayRain(map, rainGifImageSource) {
     legendDiv.addTo(map);
     rainLegend.addTo(map);
     // place sub-elements into map-legend:
+    let mapLegendMainGroup = document.createElement("div");
+    mapLegendMainGroup.id = "map-legend-main-group";
+    let mapLegendDataGroup = document.createElement("div");
+    mapLegendDataGroup.id = "map-legend-data-group";
     let timeLegend = document.createElement("div");
     timeLegend.id = "time-legend";
     let timeLegendImg = document.createElement("img");
@@ -93,15 +99,31 @@ function displayRain(map, rainGifImageSource) {
     let timeLegendBoder = document.createElement("div"); // border to hide rain blue pixels when resizing is not exactly perfect (on small screens)
     timeLegendBoder.id = "time-legend-border";
 
-    // For debug:
-    let versionLegend = document.createElement("div");
-    versionLegend.innerHTML = `<p style="color: #000;">v${VERSION}</p>`;
-    document.getElementById("map-legend").appendChild(versionLegend);
-
-    document.getElementById("map-legend").appendChild(timeLegend);
+    
+    let drawerDiv = document.querySelector("div#drawer");
+    document.getElementById("map-legend").appendChild(drawerDiv);
+    let messageDiv = document.querySelector("div#message");
+    document.getElementById("map-legend").appendChild(messageDiv);
+    
+    document.getElementById("map-legend").appendChild(mapLegendMainGroup);
+    document.getElementById("map-legend-main-group").appendChild(mapLegendDataGroup);
+    document.getElementById("map-legend-data-group").appendChild(timeLegend);
     document.getElementById("time-legend").appendChild(timeLegendBoder);
     document.getElementById("time-legend").appendChild(timeLegendImg);
-    document.getElementById("map-legend").appendChild(document.getElementById("rain-legend"));
+    document.getElementById("map-legend-data-group").appendChild(document.getElementById("rain-legend"));
+
+    let drawerButton = document.createElement("a");
+    drawerButton.id = "drawer-button";
+    drawerButton.classList.add("button", "dark", "small");
+    drawerButton.innerHTML = `<img class="icon" alt="" src="static/images/arrow_up.svg"/>`;
+    document.getElementById("map-legend-main-group").appendChild(drawerButton);
+    
+    // App version:
+    let versionLegend = document.createElement("div");
+    versionLegend.innerHTML = `<p class="version-number">v${VERSION}</p>`;
+    document.getElementById("map-legend").appendChild(versionLegend);
+    blockMarkerCreation(document.getElementById("map-legend"));
+    
     // ***** Map legend - End ***** //
 
     // Dynamically update styles of my custom overlay, when styles of the reference overlay are changed:
@@ -118,40 +140,6 @@ function displayRain(map, rainGifImageSource) {
     }); // link the observer to the reference overlay
 }
 
-function addRefreshButton(map) {
-    L.Control.LegendWrapper = L.Control.extend({
-        onAdd: function (map) {
-            let divBut = L.DomUtil.create("div");
-            divBut.id = "div-refresh-button";
-            divBut.className += "refresh-button-hidden";
-            return divBut;
-        },
-    });
-    const divBut = new L.Control.LegendWrapper({ position: "topleft" });
-    divBut.addTo(map);
-    const refreshBut = document.querySelector("#refresh-button");
-    document.getElementById("div-refresh-button").appendChild(refreshBut);
-
-    // Make button appear on map move:
-    map.addEventListener("movestart", function (ev) {
-        // triggered on map move/zoom
-        document.getElementById("div-refresh-button").className = "leaflet-control refresh-button-visible";
-    });
-    // Make button disappear after map move:
-    map.addEventListener("moveend", function (ev) {
-        // triggered on map move/zoom
-        setTimeout(() => {
-            document.getElementById("div-refresh-button").className = "leaflet-control refresh-button-hidden";
-        }, 2000);
-    });
-    // Perform action on button click:
-    document.getElementById("div-refresh-button").addEventListener("click", function (ev) {
-        // triggered on map move/zoom
-        window.location.reload(true); // force refresh
-        ev.stopPropagation();
-    });
-}
-
 function insertReleaseNote(map) {
     L.Control.ReleaseNote = L.Control.extend({
         onAdd: function (map) {
@@ -163,6 +151,13 @@ function insertReleaseNote(map) {
     });
     const popUp = new L.Control.ReleaseNote({ position: 'topleft' });
     popUp.addTo(map);
+}
+
+function generateMarker(map, lat, lng) {
+    const marker = new Marker(map, lat, lng);
+    marker.displayOnMap();
+    marker.saveInLocalStorage();
+    marker.showDetails();
 }
 
 // Actions to perform when the document is loaded:
@@ -183,18 +178,28 @@ document.addEventListener("DOMContentLoaded", () => {
     // display rain:
     const rainGifImageSource = "https://www.meteo60.fr/radars/animation-radars-france.gif";
     displayRain(map, rainGifImageSource);
-    addRefreshButton(map);
 
     // Insert release note Control:
     insertReleaseNote(map);
 
+    // Activate drawer listener:
+    activateDrawerListener();
+
+    // Activate user location features:
+    activateLocation(map);
+
+    // Activate refresh button:
+    document.getElementById("refresh-button").addEventListener("click", function (ev) {
+        window.location.reload(true); // force refresh
+        ev.stopPropagation();
+    });
+
+    // ***** Markers management - Start ***** //
+
     map.addEventListener('dblclick', function(ev) {
         ev.originalEvent.preventDefault();
         ev.originalEvent.stopPropagation();
-        const marker = new Marker(map, ev.latlng.lat, ev.latlng.lng);
-        marker.displayOnMap();
-        marker.saveInLocalStorage();
-        marker.showDetails();
+        generateMarker(map, ev.latlng.lat, ev.latlng.lng);
     });
     
     // Close maker details pop-up on click:
@@ -222,14 +227,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 ev.originalEvent.preventDefault();
                 ev.originalEvent.stopPropagation();
                 map.removeEventListener('touchmove', detectMoves);
-                const marker = new Marker(map, ev.latlng.lat, ev.latlng.lng);
-                marker.displayOnMap();
-                marker.saveInLocalStorage();
-                marker.showDetails();
+                generateMarker(map, ev.latlng.lat, ev.latlng.lng);
             }
         }, 500);
     })
     map.addEventListener('touchend', function(ev) {
         clearTimeout(pressTimer);
     })
+
+    // ***** Markers management - End ***** //
 });
