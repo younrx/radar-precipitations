@@ -194,6 +194,13 @@ document.addEventListener("DOMContentLoaded", () => {
         ev.stopPropagation();
     });
 
+    // Refresh page to update rain data every time the user re-opens the tab/page:
+    document.addEventListener("visibilitychange", function() {
+        if (!document.hidden){ // i.e. if the page displayed is the current app
+            window.location.reload(true); // force refresh
+        }
+    });
+
     // ***** Markers management - Start ***** //
 
     map.addEventListener('dblclick', function(ev) {
