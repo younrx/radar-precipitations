@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+  <circle class="spin" cx="400" cy="400" fill="none"
+    r="203" stroke-width="33" stroke="#000"
+    stroke-dasharray="462 1400"
+    stroke-linecap="round" />
+</svg>

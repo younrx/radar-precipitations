@@ -1,6 +1,7 @@
 ///// Map setup /////
 
 import { Marker, loadMarkers } from "./markers.js";
+import { activateLocation } from "./location.js";
 import { VERSION } from "../sw.js";
 
 // Display map according to view settings:
@@ -16,8 +17,7 @@ function setMapView(map) {
     const viewCoordinatesLng = localStorage.getItem("viewCoordinatesLng") != null ? localStorage.getItem("viewCoordinatesLng") : viewCoordinatesDefault.lng;
     const viewZoom = localStorage.getItem("viewZoom") != null ? localStorage.getItem("viewZoom") : viewDefaultZoom;
     // apply view parameters:
-    map.setView({ lat: viewCoordinatesLat, lng: viewCoordinatesLng });
-    map.setZoom(viewZoom);
+    map.setView({ lat: viewCoordinatesLat, lng: viewCoordinatesLng }, viewZoom);
 
     // Store view parameters in local cache so that the view shown after loading page is based on user preferences:
     map.addEventListener("moveend", function (ev) {
@@ -86,6 +86,10 @@ function displayRain(map, rainGifImageSource) {
     legendDiv.addTo(map);
     rainLegend.addTo(map);
     // place sub-elements into map-legend:
+    let mapLegendMainGroup = document.createElement("div");
+    mapLegendMainGroup.id = "map-legend-main-group";
+    let mapLegendDataGroup = document.createElement("div");
+    mapLegendDataGroup.id = "map-legend-data-group";
     let timeLegend = document.createElement("div");
     timeLegend.id = "time-legend";
     let timeLegendImg = document.createElement("img");
@@ -93,15 +97,25 @@ function displayRain(map, rainGifImageSource) {
     let timeLegendBoder = document.createElement("div"); // border to hide rain blue pixels when resizing is not exactly perfect (on small screens)
     timeLegendBoder.id = "time-legend-border";
 
-    // For debug:
+    // App version for debug:
     let versionLegend = document.createElement("div");
-    versionLegend.innerHTML = `<p style="color: #000;">v${VERSION}</p>`;
+    versionLegend.innerHTML = `<p class="version-number">v${VERSION}</p>`;
+    
+    document.getElementById("map-legend").appendChild(mapLegendMainGroup);
     document.getElementById("map-legend").appendChild(versionLegend);
+    document.getElementById("map-legend-main-group").appendChild(mapLegendDataGroup);
 
-    document.getElementById("map-legend").appendChild(timeLegend);
+    document.getElementById("map-legend-data-group").appendChild(timeLegend);
     document.getElementById("time-legend").appendChild(timeLegendBoder);
     document.getElementById("time-legend").appendChild(timeLegendImg);
-    document.getElementById("map-legend").appendChild(document.getElementById("rain-legend"));
+    document.getElementById("map-legend-data-group").appendChild(document.getElementById("rain-legend"));
+
+    let locateButton = document.createElement("a");
+    locateButton.id = "locate";
+    locateButton.classList.add("button-dark");
+    locateButton.innerHTML = `<img class="icon-dark" alt="" src="static/images/aim.svg"/>`;
+    document.getElementById("map-legend-main-group").appendChild(locateButton);
+
     // ***** Map legend - End ***** //
 
     // Dynamically update styles of my custom overlay, when styles of the reference overlay are changed:
@@ -130,6 +144,7 @@ function addRefreshButton(map) {
     const divBut = new L.Control.LegendWrapper({ position: "topleft" });
     divBut.addTo(map);
     const refreshBut = document.querySelector("#refresh-button");
+    refreshBut.classList.add("button-dark");
     document.getElementById("div-refresh-button").appendChild(refreshBut);
 
     // Make button appear on map move:
@@ -165,6 +180,13 @@ function insertReleaseNote(map) {
     popUp.addTo(map);
 }
 
+function generateMarker(map, lat, lng) {
+    const marker = new Marker(map, lat, lng);
+    marker.displayOnMap();
+    marker.saveInLocalStorage();
+    marker.showDetails();
+}
+
 // Actions to perform when the document is loaded:
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -188,13 +210,15 @@ document.addEventListener("DOMContentLoaded", () => {
     // Insert release note Control:
     insertReleaseNote(map);
 
+    // Activate user location features:
+    activateLocation(map);
+
+    // ***** Markers management - Start ***** //
+
     map.addEventListener('dblclick', function(ev) {
         ev.originalEvent.preventDefault();
         ev.originalEvent.stopPropagation();
-        const marker = new Marker(map, ev.latlng.lat, ev.latlng.lng);
-        marker.displayOnMap();
-        marker.saveInLocalStorage();
-        marker.showDetails();
+        generateMarker(map, ev.latlng.lat, ev.latlng.lng);
     });
     
     // Close maker details pop-up on click:
@@ -222,14 +246,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 ev.originalEvent.preventDefault();
                 ev.originalEvent.stopPropagation();
                 map.removeEventListener('touchmove', detectMoves);
-                const marker = new Marker(map, ev.latlng.lat, ev.latlng.lng);
-                marker.displayOnMap();
-                marker.saveInLocalStorage();
-                marker.showDetails();
+                generateMarker(map, ev.latlng.lat, ev.latlng.lng);
             }
         }, 500);
     })
     map.addEventListener('touchend', function(ev) {
         clearTimeout(pressTimer);
     })
+
+    // ***** Markers management - End ***** //
 });

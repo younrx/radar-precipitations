@@ -16,22 +16,49 @@ div.leaflet-left:has(> #map-legend) {
     margin-left: 0;
     margin-bottom: 10px;
 }
+#map-legend .version-number {
+    color: black;
+}
 #map-legend a {
     color: white;
     text-decoration: none;
 }
+#map-legend-main-group {
+    display: flex;
+    align-items: center;
+    height: fit-content;
+    width: 100%;
+    padding: 5px;
+    background-color: white;
+    border-radius: 5px;
+}
+a#locate {
+    margin-left: 5px;
+}
+a#locate img {
+    height: 20px;
+    width: 20px;
+}
+#map-legend-data-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
 #rain-legend {
     width: 100%;
     margin-left: 0;
+    margin-bottom: 0;
 }
 #time-legend {
     width: 100%;
-    aspect-ratio: 450/24; /* value extracted from gif image size. It asumes the gif image size never change */
+    z-index: 10;
+    aspect-ratio: 15.9375; /* value extracted from gif image size. It asumes the gif image size never change */
     overflow: hidden;
 }
 #time-legend img {
-    width: 218.888888%; /* value extracted from gif image size. It asumes the gif image size never change */
-    transform: translate(-27.106598%, -97.272727%); /* value extracted from gif image size. It asumes the gif image size never change */
+    width: 259%;
+    transform: translate(-35%, -97.272727%); /* value extracted from gif image size. It asumes the gif image size never change */
     z-index: -1;
 }
 #marker-legend-div {
@@ -71,16 +98,6 @@ div.leaflet-left:has(> #map-legend) {
 #marker-legend-div .buttons-list .button:not(:last-child) {
     margin-right: 20px;
 }
-#marker-legend-div .buttons-list .button {
-    height: 40px;
-    width: 40px;
-}
-#marker-legend-div .icon {
-    height: 25px;
-    color: var(--purple-2);
-    /* make svg purple: */
-    filter: invert(21%) sepia(64%) saturate(1013%) hue-rotate(229deg) brightness(93%) contrast(98%);
-}
 #rain-gif-wrapper {
     aspect-ratio: 985/850;
     overflow: hidden;
@@ -92,10 +109,7 @@ div.leaflet-left:has(> #map-legend) {
     visibility: hidden;
 }
 #refresh-button {
-    width: 40px;
-    height: 40px;
     padding: 10px;
-    background-color: #0c376d;
     border-radius: 50%;
     border: none;
     box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.5);
@@ -123,7 +137,6 @@ div.leaflet-left:has(> #div-refresh-button) {
 @media (width <= 640px) {
     #map-legend {
         width: 90dvw;
-        margin-bottom: 0;
     }
     /* Hide rain blue pixels when time bar is not perfectly resized - Start */
     #time-legend {
