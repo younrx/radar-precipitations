@@ -1,5 +1,7 @@
 // Markers specific code
 
+import { blockMarkerCreation } from "./utils.js";
+
 
 const MARKER_ICON = L.icon({
     iconUrl: `static/images/pin.svg`,
@@ -142,7 +144,7 @@ export class Marker {
                 <p class="title-1">${addressText}</p>
                 ${addressText ? `<p class="title-2">${cityText}</p>` : ''}
                 <p class="subtitle">${coordinatesText}</p>
-                <div class=buttons-list>
+                <div class="buttons-list">
                     ${
                         queryAddressText ?
                         `<a
@@ -173,12 +175,7 @@ export class Marker {
             marker.deleteFromLocalStorage();
             markerLegendDiv.remove();  // delete details pop-up
         });
-        // Block cusrsor creation through clicks on the details pop-up:
-        ['click', 'dblclick', 'mousedown', 'touchstart'].forEach(function(eventName){
-            markerLegendDiv.addEventListener(eventName, function(ev) {
-                ev.stopPropagation();
-            });
-        });
+        blockMarkerCreation(markerLegendDiv);
     }
 }
 

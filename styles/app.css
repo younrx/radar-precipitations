@@ -4,6 +4,7 @@
     /* --blue-white: #f6f9fc; */
     --dark-blue-1: #0c376d;
     --dark-blue-2: #06254c;
+    --light-blue-1: #c0d4ec;
     --light-purple-1: #e8dcfc;
     --light-purple-2: #decef7;
     --purple-1: #c7b4eb;
@@ -24,7 +25,14 @@ body {
 .hidden {
     display: none;
 }
-.button, .button-dark {
+.flex-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Buttons -- Start */
+.button {
     height: 40px;
     width: 40px;
     min-height: 40px;
@@ -34,29 +42,37 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-.button {
     border: solid 2px var(--light-purple-1);
     background-color: var(--light-purple-2);
     color: var(--purple-3);
 }
-.button-dark {
-    /* border: solid 2px var(--dark-blue-2); */
+.button.small {
+    height: 35px;
+    width: 35px;
+    min-height: 35px;
+    min-width: 35px;
+    margin: 5px;
+}
+.button.dark {
+    border: solid 2px var(--dark-blue-1);
     background-color: var(--dark-blue-1);
     color: white;
 }
 .icon {
     height: 25px;
     color: var(--purple-2);
-    /* make svg purple: */
     filter: invert(21%) sepia(64%) saturate(1013%) hue-rotate(229deg) brightness(93%) contrast(98%);
 }
-.icon-dark {
+.button.dark .icon {
     height: 25px;
     color: white;
-    /* make svg white: */
     filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(273deg) brightness(105%) contrast(101%);
-    /* filter: invert(87%) sepia(14%) saturate(1284%) hue-rotate(198deg) brightness(105%) contrast(98%); */
-    /* filter: invert(97%) sepia(88%) saturate(550%) hue-rotate(176deg) brightness(101%) contrast(94%); */
-    /* filter: invert(100%) sepia(3%) saturate(6147%) hue-rotate(174deg) brightness(99%) contrast(99%); */
 }
+.buttons-list {
+    display: flex;
+    align-items: center;
+}
+.buttons-list > :not(:last-child) {
+    margin-right: 20px;
+}
+/* Buttons -- Stop */
